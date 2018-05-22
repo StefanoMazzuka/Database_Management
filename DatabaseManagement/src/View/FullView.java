@@ -28,6 +28,7 @@ import javax.swing.JSlider;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
 public class FullView extends JFrame {
 
@@ -47,7 +48,8 @@ public class FullView extends JFrame {
 	 */
 	public FullView() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 419);
+		setLocationRelativeTo(null);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -168,16 +170,16 @@ public class FullView extends JFrame {
 		JPanel dataQueryPanel = new JPanel();
 		queryPanel.add(dataQueryPanel, BorderLayout.NORTH);
 		GridBagLayout gbl_dataQueryPanel = new GridBagLayout();
-		gbl_dataQueryPanel.columnWidths = new int[] {137, 0};
+		gbl_dataQueryPanel.columnWidths = new int[] {0, 0};
 		gbl_dataQueryPanel.rowHeights = new int[] {0, 0, 0, 0};
-		gbl_dataQueryPanel.columnWeights = new double[]{1.0, 1.0};
+		gbl_dataQueryPanel.columnWeights = new double[]{0.0, 0.0};
 		gbl_dataQueryPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0};
 		dataQueryPanel.setLayout(gbl_dataQueryPanel);
 		
 		JRadioButton brandRadioButton = new JRadioButton("Marca");
 		brandRadioButton.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_brandRadioButton = new GridBagConstraints();
-		gbc_brandRadioButton.anchor = GridBagConstraints.EAST;
+		gbc_brandRadioButton.anchor = GridBagConstraints.WEST;
 		gbc_brandRadioButton.insets = new Insets(0, 0, 5, 5);
 		gbc_brandRadioButton.gridx = 0;
 		gbc_brandRadioButton.gridy = 0;
@@ -194,13 +196,17 @@ public class FullView extends JFrame {
 		JRadioButton maximumConsumptionRadioButton = new JRadioButton("Consumo máximo");
 		maximumConsumptionRadioButton.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_maximumConsumptionRadioButton = new GridBagConstraints();
-		gbc_maximumConsumptionRadioButton.anchor = GridBagConstraints.EAST;
+		gbc_maximumConsumptionRadioButton.anchor = GridBagConstraints.WEST;
 		gbc_maximumConsumptionRadioButton.insets = new Insets(0, 0, 5, 5);
 		gbc_maximumConsumptionRadioButton.gridx = 0;
 		gbc_maximumConsumptionRadioButton.gridy = 1;
 		dataQueryPanel.add(maximumConsumptionRadioButton, gbc_maximumConsumptionRadioButton);
 		
 		JSlider maximumConsumptionSlider = new JSlider();
+		maximumConsumptionSlider.setPaintLabels(true);
+		maximumConsumptionSlider.setPaintTicks(true);
+		maximumConsumptionSlider.setMajorTickSpacing(10);
+		maximumConsumptionSlider.setMinorTickSpacing(5);
 		GridBagConstraints gbc_maximumConsumptionSlider = new GridBagConstraints();
 		gbc_maximumConsumptionSlider.anchor = GridBagConstraints.WEST;
 		gbc_maximumConsumptionSlider.insets = new Insets(0, 0, 5, 0);
@@ -211,13 +217,17 @@ public class FullView extends JFrame {
 		JRadioButton maximumEmissionsRadioButton = new JRadioButton("Emisiones máximas");
 		maximumEmissionsRadioButton.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_maximumEmissionsRadioButton = new GridBagConstraints();
-		gbc_maximumEmissionsRadioButton.anchor = GridBagConstraints.EAST;
+		gbc_maximumEmissionsRadioButton.anchor = GridBagConstraints.WEST;
 		gbc_maximumEmissionsRadioButton.insets = new Insets(0, 0, 5, 5);
 		gbc_maximumEmissionsRadioButton.gridx = 0;
 		gbc_maximumEmissionsRadioButton.gridy = 2;
 		dataQueryPanel.add(maximumEmissionsRadioButton, gbc_maximumEmissionsRadioButton);
 		
 		JSlider maximumEmissionsSlider = new JSlider();
+		maximumEmissionsSlider.setPaintLabels(true);
+		maximumEmissionsSlider.setPaintTicks(true);
+		maximumEmissionsSlider.setMajorTickSpacing(10);
+		maximumEmissionsSlider.setMinorTickSpacing(5);
 		GridBagConstraints gbc_maximumEmissionsSlider = new GridBagConstraints();
 		gbc_maximumEmissionsSlider.anchor = GridBagConstraints.WEST;
 		gbc_maximumEmissionsSlider.insets = new Insets(0, 0, 5, 0);
@@ -228,7 +238,7 @@ public class FullView extends JFrame {
 		JRadioButton energeticClassificationRadioButton = new JRadioButton("Calificación energética");
 		energeticClassificationRadioButton.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_energeticClassificationRadioButton = new GridBagConstraints();
-		gbc_energeticClassificationRadioButton.anchor = GridBagConstraints.EAST;
+		gbc_energeticClassificationRadioButton.anchor = GridBagConstraints.WEST;
 		gbc_energeticClassificationRadioButton.insets = new Insets(0, 0, 0, 5);
 		gbc_energeticClassificationRadioButton.gridx = 0;
 		gbc_energeticClassificationRadioButton.gridy = 3;
@@ -262,11 +272,19 @@ public class FullView extends JFrame {
 		JPanel dataCreatePanel = new JPanel();
 		createPanel.add(dataCreatePanel, BorderLayout.CENTER);
 		GridBagLayout gbl_dataCreatePanel = new GridBagLayout();
-		gbl_dataCreatePanel.columnWidths = new int[]{201, 175, 0};
+		gbl_dataCreatePanel.columnWidths = new int[] {0, 0};
 		gbl_dataCreatePanel.rowHeights = new int[] {0, 0, 0, 0, 0, 0};
-		gbl_dataCreatePanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_dataCreatePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_dataCreatePanel.columnWeights = new double[]{0.0, 0.0};
+		gbl_dataCreatePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		dataCreatePanel.setLayout(gbl_dataCreatePanel);
+		
+		JLabel createNewModelLabel = new JLabel("DATOS PARA EL NUEVO MODELO");
+		GridBagConstraints gbc_createNewModelLabel = new GridBagConstraints();
+		gbc_createNewModelLabel.gridwidth = 2;
+		gbc_createNewModelLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_createNewModelLabel.gridx = 0;
+		gbc_createNewModelLabel.gridy = 0;
+		dataCreatePanel.add(createNewModelLabel, gbc_createNewModelLabel);
 		
 		JLabel brandLabel = new JLabel("Marca");
 		brandLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -274,7 +292,7 @@ public class FullView extends JFrame {
 		gbc_brandLabel.anchor = GridBagConstraints.EAST;
 		gbc_brandLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_brandLabel.gridx = 0;
-		gbc_brandLabel.gridy = 0;
+		gbc_brandLabel.gridy = 1;
 		dataCreatePanel.add(brandLabel, gbc_brandLabel);
 		
 		JComboBox brandsCreateComboBox = new JComboBox();
@@ -282,7 +300,7 @@ public class FullView extends JFrame {
 		gbc_brandsCreateComboBox.anchor = GridBagConstraints.WEST;
 		gbc_brandsCreateComboBox.insets = new Insets(0, 0, 5, 0);
 		gbc_brandsCreateComboBox.gridx = 1;
-		gbc_brandsCreateComboBox.gridy = 0;
+		gbc_brandsCreateComboBox.gridy = 1;
 		dataCreatePanel.add(brandsCreateComboBox, gbc_brandsCreateComboBox);
 		
 		JLabel modelLabel = new JLabel("Modelo");
@@ -291,15 +309,16 @@ public class FullView extends JFrame {
 		gbc_modelLabel.anchor = GridBagConstraints.EAST;
 		gbc_modelLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_modelLabel.gridx = 0;
-		gbc_modelLabel.gridy = 1;
+		gbc_modelLabel.gridy = 2;
 		dataCreatePanel.add(modelLabel, gbc_modelLabel);
 		
 		modelTextField = new JTextField();
+		modelTextField.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_modelTextField = new GridBagConstraints();
 		gbc_modelTextField.anchor = GridBagConstraints.WEST;
 		gbc_modelTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_modelTextField.gridx = 1;
-		gbc_modelTextField.gridy = 1;
+		gbc_modelTextField.gridy = 2;
 		dataCreatePanel.add(modelTextField, gbc_modelTextField);
 		modelTextField.setColumns(10);
 		
@@ -309,15 +328,16 @@ public class FullView extends JFrame {
 		gbc_consumptionLabel.anchor = GridBagConstraints.EAST;
 		gbc_consumptionLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_consumptionLabel.gridx = 0;
-		gbc_consumptionLabel.gridy = 2;
+		gbc_consumptionLabel.gridy = 3;
 		dataCreatePanel.add(consumptionLabel, gbc_consumptionLabel);
 		
 		consumptionTextField = new JTextField();
+		consumptionTextField.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_consumptionTextField = new GridBagConstraints();
 		gbc_consumptionTextField.anchor = GridBagConstraints.WEST;
 		gbc_consumptionTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_consumptionTextField.gridx = 1;
-		gbc_consumptionTextField.gridy = 2;
+		gbc_consumptionTextField.gridy = 3;
 		dataCreatePanel.add(consumptionTextField, gbc_consumptionTextField);
 		consumptionTextField.setColumns(10);
 		
@@ -327,15 +347,16 @@ public class FullView extends JFrame {
 		gbc_emissionsLabel.anchor = GridBagConstraints.EAST;
 		gbc_emissionsLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_emissionsLabel.gridx = 0;
-		gbc_emissionsLabel.gridy = 3;
+		gbc_emissionsLabel.gridy = 4;
 		dataCreatePanel.add(emissionsLabel, gbc_emissionsLabel);
 		
 		emissionsTextField = new JTextField();
+		emissionsTextField.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_emissionsTextField = new GridBagConstraints();
 		gbc_emissionsTextField.anchor = GridBagConstraints.WEST;
 		gbc_emissionsTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_emissionsTextField.gridx = 1;
-		gbc_emissionsTextField.gridy = 3;
+		gbc_emissionsTextField.gridy = 4;
 		dataCreatePanel.add(emissionsTextField, gbc_emissionsTextField);
 		emissionsTextField.setColumns(10);
 		
@@ -345,14 +366,15 @@ public class FullView extends JFrame {
 		gbc_energeticClassificationLabel.anchor = GridBagConstraints.EAST;
 		gbc_energeticClassificationLabel.insets = new Insets(0, 0, 0, 5);
 		gbc_energeticClassificationLabel.gridx = 0;
-		gbc_energeticClassificationLabel.gridy = 4;
+		gbc_energeticClassificationLabel.gridy = 5;
 		dataCreatePanel.add(energeticClassificationLabel, gbc_energeticClassificationLabel);
 		
 		JComboBox energeticClassificationCreateComboBox = new JComboBox();
+		energeticClassificationCreateComboBox.setMaximumRowCount(5);
 		GridBagConstraints gbc_energeticClassificationCreateComboBox = new GridBagConstraints();
 		gbc_energeticClassificationCreateComboBox.anchor = GridBagConstraints.WEST;
 		gbc_energeticClassificationCreateComboBox.gridx = 1;
-		gbc_energeticClassificationCreateComboBox.gridy = 4;
+		gbc_energeticClassificationCreateComboBox.gridy = 5;
 		dataCreatePanel.add(energeticClassificationCreateComboBox, gbc_energeticClassificationCreateComboBox);
 	}
 	
