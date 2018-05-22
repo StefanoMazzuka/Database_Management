@@ -29,6 +29,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import java.awt.Color;
+import javax.swing.UIManager;
+import javax.swing.JScrollPane;
 
 public class FullView extends JFrame {
 
@@ -38,15 +41,19 @@ public class FullView extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JMenuItem exportMenuItem;
-	private JTable queryTable;
 	private JTextField modelTextField;
 	private JTextField consumptionTextField;
 	private JTextField emissionsTextField;
+	private JTable queryTable;
 
 	/**
 	 * Create the frame.
 	 */
 	public FullView() {
+		String[] x = {"Hola", "Hola"};
+		String[][] x2 = {{"1", "1x"}, {"2", "2x"}, {"3", "3x"}, {"4", "4x"}, {"5", "5x"}, {"6", "6x"}, 
+				{"7", "7x"}, {"8", "8x"}, {"9", "9x"}, {"10", "10x"}, {"11", "11x"}, {"12", "12x"}, {"13", "13x"}};
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 419);
 		setLocationRelativeTo(null);
@@ -184,8 +191,8 @@ public class FullView extends JFrame {
 		gbc_brandRadioButton.gridx = 0;
 		gbc_brandRadioButton.gridy = 0;
 		dataQueryPanel.add(brandRadioButton, gbc_brandRadioButton);
-		
-		JComboBox brandsQueryComboBox = new JComboBox();
+	
+		JComboBox brandsQueryComboBox = new JComboBox(x);
 		GridBagConstraints gbc_brandsQueryComboBox = new GridBagConstraints();
 		gbc_brandsQueryComboBox.anchor = GridBagConstraints.WEST;
 		gbc_brandsQueryComboBox.insets = new Insets(0, 0, 5, 0);
@@ -244,15 +251,62 @@ public class FullView extends JFrame {
 		gbc_energeticClassificationRadioButton.gridy = 3;
 		dataQueryPanel.add(energeticClassificationRadioButton, gbc_energeticClassificationRadioButton);
 		
-		JComboBox energeticClassificationQueryComboBox = new JComboBox();
+		brandRadioButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				maximumConsumptionRadioButton.setSelected(false);
+				maximumEmissionsRadioButton.setSelected(false);
+				energeticClassificationRadioButton.setSelected(false);
+			}
+		});
+		
+		maximumConsumptionRadioButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				brandRadioButton.setSelected(false);
+				maximumEmissionsRadioButton.setSelected(false);
+				energeticClassificationRadioButton.setSelected(false);
+			}
+		});
+		
+		maximumEmissionsRadioButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				brandRadioButton.setSelected(false);
+				maximumConsumptionRadioButton.setSelected(false);
+				energeticClassificationRadioButton.setSelected(false);
+			}
+		});
+		
+		energeticClassificationRadioButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				brandRadioButton.setSelected(false);
+				maximumConsumptionRadioButton.setSelected(false);
+				maximumEmissionsRadioButton.setSelected(false);
+			}
+		});
+		
+		JComboBox energeticClassificationQueryComboBox = new JComboBox(x);
 		GridBagConstraints gbc_energeticClassificationQueryComboBox = new GridBagConstraints();
 		gbc_energeticClassificationQueryComboBox.anchor = GridBagConstraints.WEST;
 		gbc_energeticClassificationQueryComboBox.gridx = 1;
 		gbc_energeticClassificationQueryComboBox.gridy = 3;
 		dataQueryPanel.add(energeticClassificationQueryComboBox, gbc_energeticClassificationQueryComboBox);
 		
-		queryTable = new JTable();
-		queryPanel.add(queryTable, BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane();
+		queryPanel.add(scrollPane, BorderLayout.CENTER);
+		
+		queryTable = new JTable(x2, x);
+		scrollPane.setViewportView(queryTable);
 		
 		JPanel createPanel = new JPanel();
 		contentPane.add(createPanel, "createPanel");
@@ -270,6 +324,7 @@ public class FullView extends JFrame {
 		toolBarFullCreatePanel.add(saveButton);
 		
 		JPanel dataCreatePanel = new JPanel();
+		dataCreatePanel.setBackground(UIManager.getColor("Panel.background"));
 		createPanel.add(dataCreatePanel, BorderLayout.CENTER);
 		GridBagLayout gbl_dataCreatePanel = new GridBagLayout();
 		gbl_dataCreatePanel.columnWidths = new int[] {0, 0};
@@ -376,6 +431,43 @@ public class FullView extends JFrame {
 		gbc_energeticClassificationCreateComboBox.gridx = 1;
 		gbc_energeticClassificationCreateComboBox.gridy = 5;
 		dataCreatePanel.add(energeticClassificationCreateComboBox, gbc_energeticClassificationCreateComboBox);
+		
+		searchButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String brand = "";
+				if (brandRadioButton.isSelected())
+					brand = (String) brandsQueryComboBox.getSelectedItem();
+				
+				String consumption = "";
+				if (maximumConsumptionRadioButton.isSelected())
+					consumption = String.valueOf(maximumConsumptionSlider.getValue());
+				
+				String emissions = "";
+				if (maximumEmissionsRadioButton.isSelected())
+					emissions = String.valueOf(maximumEmissionsSlider.getValue());
+				
+				String classification = "";
+				if (energeticClassificationRadioButton.isSelected())
+					classification = (String) energeticClassificationQueryComboBox.getSelectedItem();
+				
+				String value1 = "";
+				String value2 = "";
+				if (!queryTable.getSelectionModel().isSelectionEmpty()) {
+					value1 = queryTable.getValueAt(queryTable.getSelectedRow(), 0).toString();
+					value2 = queryTable.getValueAt(queryTable.getSelectedRow(), 1).toString();
+				}
+								
+				JOptionPane.showMessageDialog(null, 
+						"Marca: " + brand + '\n' +
+						"Consumo: " + consumption + '\n' +
+						"Emisiones: " + emissions + '\n' +
+						"Clasificacion: " + classification + '\n' +
+						"Valores de la tabla: " + value1 + " " + value2);
+			}
+		});
 	}
 	
 	private void updateJTable(JTable table) {
