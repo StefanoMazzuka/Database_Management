@@ -98,7 +98,7 @@ public class FullView extends JFrame {
 				// TODO Auto-generated method stub
 				try {
 					java.awt.Desktop.getDesktop().browse(
-							java.net.URI.create("https://github.com/StefanoMazzuka"));
+							java.net.URI.create("https://stefanomazzuka.github.io/Database_Management/"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
