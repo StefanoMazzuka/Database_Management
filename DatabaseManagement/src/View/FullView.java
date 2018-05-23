@@ -30,6 +30,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import java.awt.Color;
+import java.awt.Font;
+
 import javax.swing.UIManager;
 import javax.swing.JScrollPane;
 
@@ -118,11 +120,17 @@ public class FullView extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				JOptionPane.showMessageDialog(null, "Author:" + '\n' + 
-						"Stefano Mazzuka" + '\n' + 
-						"Contact email:" + '\n' + 
-						"stefano.mazzuka@gamil.com");
+				// TODO Auto-generated method stub		
+			    JLabel[] labels = new JLabel[4];
+			    labels[0] = new JLabel("Author:");
+			    labels[0].setFont(new Font("Arial", Font.BOLD, 12));
+			    labels[1] = new JLabel("Stefano Mazzuka");
+			    labels[1].setFont(new Font("Arial", Font.ITALIC, 12));
+			    labels[2] = new JLabel("Contact email:");
+			    labels[2].setFont(new Font("Arial", Font.BOLD, 12));
+			    labels[3] = new JLabel("stefano.mazzuka@gmail.com");
+			    labels[3].setFont(new Font("Arial", Font.ITALIC, 12));
+			    JOptionPane.showMessageDialog( null, labels, null, JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		ayudaNewMenu.add(aboutMenuItem);
