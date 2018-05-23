@@ -209,6 +209,7 @@ public class FullView extends JFrame {
 		dataQueryPanel.setLayout(gbl_dataQueryPanel);
 		
 		JRadioButton brandRadioButton = new JRadioButton("Marca");
+		brandRadioButton.setSelected(true);
 		brandRadioButton.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_brandRadioButton = new GridBagConstraints();
 		gbc_brandRadioButton.anchor = GridBagConstraints.WEST;
@@ -360,8 +361,8 @@ public class FullView extends JFrame {
 		
 		JScrollPane scrollPane = new JScrollPane();
 		queryPanel.add(scrollPane, BorderLayout.CENTER);
-		
-		queryTable = new JTable(x2, x);
+
+		queryTable = new JTable();
 		scrollPane.setViewportView(queryTable);
 		
 		JPanel createPanel = new JPanel();
@@ -493,57 +494,44 @@ public class FullView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				ArrayList<Model> model = new ArrayList<Model>();
+				ArrayList<Model> models = new ArrayList<Model>();
 				if (brandRadioButton.isSelected()) {	
 					int brandID = conn.selectBrandID((String) brandsQueryComboBox.getSelectedItem());
-					model = conn.brandFilter(brandID);
-					for (int i = 0; i < model.size(); i++) {
-						System.out.println(model.get(i).getModel());
-//						System.out.println(model.get(i).getConsumption());
-//						System.out.println(model.get(i).getEmissions());
-//						System.out.println();
+					models = conn.brandFilter(brandID);
+					for (int i = 0; i < models.size(); i++) {
+						System.out.println(models.get(i).getModel());
 					}
 				}
 				
 				else if (maximumConsumptionRadioButton.isSelected()) {
-					model = conn.consumptionFilter(maximumConsumptionSlider.getValue());
-					for (int i = 0; i < model.size(); i++) {
-						System.out.println(model.get(i).getModel());
-						System.out.println(model.get(i).getConsumption());
-						System.out.println(model.get(i).getEmissions());
-						System.out.println();
+					models = conn.consumptionFilter(maximumConsumptionSlider.getValue());
+					for (int i = 0; i < models.size(); i++) {
+						System.out.println(models.get(i).getConsumption());
 					}
 				}
 				
 				else if (maximumEmissionsRadioButton.isSelected()) {
-					model = conn.emissionsFilter(maximumEmissionsSlider.getValue());
-					for (int i = 0; i < model.size(); i++) {
-//						System.out.println(model.get(i).getModel());
-//						System.out.println(model.get(i).getConsumption());
-						System.out.println(model.get(i).getEmissions());
-//						System.out.println();
+					models = conn.emissionsFilter(maximumEmissionsSlider.getValue());
+					for (int i = 0; i < models.size(); i++) {
+						System.out.println(models.get(i).getEmissions());
 					}
 				}
 					
 				else if (energeticClassificationRadioButton.isSelected()) {
-					String classification = conn.
-					model = conn.brandFilter(brandID);
-					for (int i = 0; i < model.size(); i++) {
-						System.out.println(model.get(i).getModel());
-//						System.out.println(model.get(i).getConsumption());
-//						System.out.println(model.get(i).getEmissions());
-//						System.out.println();
+					String classification = conn.selectEnergeticClassication((String) energeticClassificationQueryComboBox.getSelectedItem());
+					models = conn.energeticFilter(classification);
+					for (int i = 0; i < models.size(); i++) {
+						System.out.println(models.get(i).getIcon());
 					}
 				}
-//					executeClassificationQuery();
-					classification = (String) energeticClassificationQueryComboBox.getSelectedItem();
 				
-				String value1 = "";
-				String value2 = "";
-				if (!queryTable.getSelectionModel().isSelectionEmpty()) {
-					value1 = queryTable.getValueAt(queryTable.getSelectedRow(), 0).toString();
-					value2 = queryTable.getValueAt(queryTable.getSelectedRow(), 1).toString();
-				}
+				queryTable = updateTable(models);
+				scrollPane.revalidate();
+				scrollPane.repaint();
+				queryPanel.revalidate();
+				queryPanel.repaint();
+				fullQueryPanel.revalidate();
+				fullQueryPanel.repaint();
 			}
 		});
 		
@@ -585,10 +573,18 @@ public class FullView extends JFrame {
 		data = conn.selectMaxEmissions();
 		maximumEmissionsSlider.setMaximum(data + 1);
 	}
-	private void executeBrandQuery() {
+	private JTable updateTable(ArrayList<Model> models) {
+		String[] head = {"MODELO", "CONSUMO", "EMISIONES", "C.E."};
+		String[][] body = new String[models.size()][4];
+		for (int i = 0; i < models.size(); i++) {
+			body[i][0] = models.get(i).getModel();
+			body[i][1] = String.valueOf(models.get(i).getConsumption());
+			body[i][2] = String.valueOf(models.get(i).getEmissions());
+			body[i][3] = models.get(i).getIcon();
+		}
 		
-	}
-	private void updateJTable(JTable table) {
-		
+		JTable queryTable = new JTable(body, head);
+
+		return queryTable;
 	}
 }

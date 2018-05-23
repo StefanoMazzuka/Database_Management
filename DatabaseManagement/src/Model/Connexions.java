@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 
 import Controller.Model;
 
@@ -114,22 +115,39 @@ public class Connexions {
 		return data;
 	}
 	/**
-	 * Consultamos el nombre del icono de una clasificación energética concreta.
-	 * @param classification Valor de la clasificación concreta.
-	 * @return Devuelve el nombre del icono de la clasificación "classification".
+	 * Consultamos la clasificación energética de una descripcón dada.
+	 * @param desciption Valor de la descipción concreta.
+	 * @return Devuelve el nombre de la clasificación energética con descripción "desciption".
 	 */
-	public String selectEnergeticIcon(String classification) {
+	public String selectEnergeticClassication(String desciption) {
 		connect();
 		String data = "";
 		try {
-			st = connec.prepareStatement("SELECT ICON FROM eficiencias WHERE C_ENERGETICA = '" + classification + "'");
+			st = connec.prepareStatement("SELECT C_ENERGETICA FROM eficiencias WHERE DESCRIPCION = '" + desciption + "'");
 			list = st.executeQuery();
-			data = list.getString("ICON");
+			data = list.getString("C_ENERGETICA");
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, e);
 			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
 		}
 		close();
+		return data;
+	}
+	/**
+	 * Consultamos el nombre del icono de una clasifiación energética.
+	 * @param classification Valor de la clasificación energética.
+	 * @return Devuelve el nombre del icono de la clasificación energética "classification".
+	 */
+	public String selectEnergeticIcon(String classification) {
+		String data = "";
+		try {
+			PreparedStatement st = connec.prepareStatement("SELECT ICONO FROM eficiencias WHERE C_ENERGETICA = '" + classification + "'");
+			ResultSet list = st.executeQuery();
+			data = list.getString("ICONO");
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
+		}
 		return data;
 	}
 	/**
@@ -204,7 +222,7 @@ public class Connexions {
 				model.setModel(list.getString("MODELO"));
 				model.setConsumption(list.getDouble("CONSUMO"));
 				model.setEmissions(list.getInt("EMISIONES"));
-				
+				model.setIcon(selectEnergeticIcon(list.getString("C_ENERGETICA")));
 				data.add(model);
 			}
 		} catch (SQLException e) {
@@ -231,7 +249,7 @@ public class Connexions {
 				model.setModel(list.getString("MODELO"));
 				model.setConsumption(list.getDouble("CONSUMO"));
 				model.setEmissions(list.getInt("EMISIONES"));
-				
+				model.setIcon(selectEnergeticIcon(list.getString("C_ENERGETICA")));
 				data.add(model);
 			}
 		} catch (SQLException e) {
@@ -258,7 +276,7 @@ public class Connexions {
 				model.setModel(list.getString("MODELO"));
 				model.setConsumption(list.getDouble("CONSUMO"));
 				model.setEmissions(list.getInt("EMISIONES"));
-				
+				model.setIcon(selectEnergeticIcon(list.getString("C_ENERGETICA")));
 				data.add(model);
 			}
 		} catch (SQLException e) {
@@ -285,7 +303,7 @@ public class Connexions {
 				model.setModel(list.getString("MODELO"));
 				model.setConsumption(list.getDouble("CONSUMO"));
 				model.setEmissions(list.getInt("EMISIONES"));
-				
+				model.setIcon(selectEnergeticIcon(list.getString("C_ENERGETICA")));
 				data.add(model);
 			}
 		} catch (SQLException e) {
