@@ -15,20 +15,14 @@ public class Efficiency {
 	 */
 	/**
 	 * Constructura por defecto del objeto Efficiency.
-	 * @param energeticClassification Clasificación de la eficiencia.
-	 * @param description Descripción de la eficiencia.
-	 * @param icon Nombre del icono a usar para la eficiencia.
 	 */
-	public Efficiency(String energeticClassification, String description, String icon) {
-		this.energeticClassification = energeticClassification;
-		this.description = description;
-		this.icon = icon;
-	}
+	public Efficiency() {}
 	
 	/*
 	 * Getters and Setters
 	 */
 	/**
+	 * 
 	 * @return Devuelve el valor de la variable "energeticClassification".
 	 */
 	public String getEnergeticClassification() {
@@ -42,6 +36,7 @@ public class Efficiency {
 		this.energeticClassification = energeticClassification;
 	}
 	/**
+	 * 
 	 * @return Devuelve el valor de la variable "description".
 	 */
 	public String getDescription() {
@@ -55,6 +50,7 @@ public class Efficiency {
 		this.description = description;
 	}
 	/**
+	 * 
 	 * @return Devuelve el valor de la variable "icon".
 	 */
 	public String getIcon() {

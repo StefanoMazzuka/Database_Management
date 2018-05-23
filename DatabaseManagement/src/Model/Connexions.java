@@ -6,13 +6,16 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
+import Controller.Model;
+
 /**
- * Connecxions se encarga de crear la conexión con la base de 
+ * El objeto Connecxions se encarga de crear la conexión con la base de 
  * datos, cerrarla y hacer las consultas necesarias.
  * @author Stefano Mazzuka
  *
@@ -21,11 +24,22 @@ public class Connexions {
 	
 	private final String url = 
 			System.getProperty("user.dir") +
-			File.separator + "MyCookbookDB.sqlite";
+			File.separator + "bbdd_gestmotor.sqlite";
 	private Connection connec;
 	private PreparedStatement st;
 	private ResultSet list;
+
+	/*
+	 * Constructor
+	 */
+	/**
+	 * Constructura por defecto del objeto Connexions.
+	 */
+	public Connexions() {}
 	
+	/*
+	 * Methods
+	 */
 	/**
 	 * Crea la conexión con la base de datos.
 	 * @return Devuelve un booleano que indica si se conectó o no.
@@ -42,7 +56,7 @@ public class Connexions {
 				return true;
 			}
 		} catch (Exception  e) {
-			JOptionPane.showMessageDialog(null, "ERROR 001: Connection Fails.");
+			JOptionPane.showMessageDialog(null, null, "ERROR 001: Connection Fails.", JOptionPane.ERROR_MESSAGE);
 			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
 			return false;
 		}
@@ -60,15 +74,225 @@ public class Connexions {
 		}
 	}
 	/**
-	 * Elimina un modelo de la base de datos.
-	 * @param idIngredient
+	 * Consultamos todos los nombres de las marcas.
+	 * @return Devuelve un ArrayList de tipo String con todos los nombres de las marcas.
 	 */
-	public void deleteIngredient(int idIngredient) {
+	public ArrayList<String> selectBrandsNames() {
+		connect();
+		ArrayList<String> data = new ArrayList<String>();
 		try {
-			st = connec.prepareStatement("DETELE FROM ingredient WHERE idIngredient = " + idIngredient);
-			st.executeUpdate();
-		} catch (Exception e) {
+			st = connec.prepareStatement("SELECT MARCA FROM marcas");
+			list = st.executeQuery();
+			while (list.next()) {
+				data.add(list.getString("MARCA")); 
+			}
+		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
 		}
+		close();
+		return data;
+	}
+	/**
+	 * Consultamos todas las descripciones de las clasificaciones energéticas.
+	 * @return Devuelve un ArrayList de tipo String con todas las descripciones de las clasificaciones energéticas.
+	 */
+	public ArrayList<String> selectEnergeticClassificationDescriptions() {
+		connect();
+		ArrayList<String> data = new ArrayList<String>();
+		try {
+			st = connec.prepareStatement("SELECT DESCRIPCION FROM eficiencias");
+			list = st.executeQuery();
+			while (list.next()) {
+				data.add(list.getString("DESCRIPCION")); 
+			}
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
+		}
+		close();
+		return data;
+	}
+	/**
+	 * Consultamos el nombre del icono de una clasificación energética concreta.
+	 * @param classification Valor de la clasificación concreta.
+	 * @return Devuelve el nombre del icono de la clasificación "classification".
+	 */
+	public String selectEnergeticIcon(String classification) {
+		connect();
+		String data = "";
+		try {
+			st = connec.prepareStatement("SELECT ICON FROM eficiencias WHERE C_ENERGETICA = '" + classification + "'");
+			list = st.executeQuery();
+			data = list.getString("ICON");
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
+		}
+		close();
+		return data;
+	}
+	/**
+	 * Consultamos el máximo consumo de los modelos.
+	 * @return Devuelve un entero que representa el valor del consumo máximo de todos los modelos.
+	 */
+	public int selectMaxConsumption() {
+		connect();
+		int data = 0;
+		try {
+			st = connec.prepareStatement("SELECT MAX(CONSUMO) AS maxComsumo FROM modelos");
+			list = st.executeQuery();
+			data = list.getInt("maxComsumo");
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
+		}
+		close();
+		return data;
+	}
+	/**
+	 * Consultamos el máximo valor de emisiones de los modelos.
+	 * @return Devuelve un entero que representa el valor máximo de las emisiones de todos los modelos.
+	 */
+	public int selectMaxEmissions() {
+		connect();
+		int data = 0;
+		try {
+			st = connec.prepareStatement("SELECT MAX(EMISIONES) AS maxEmisiones FROM modelos");
+			list = st.executeQuery();
+			data = list.getInt("maxEmisiones");
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
+		}
+		close();
+		return data;
+	}
+	/**
+	 * Consultamos el ID de una marca en concreto.
+	 * @param brand Nombre de la marca.
+	 * @return Devuelve el ID de la marca.
+	 */
+	public int selectBrandID(String brand) {
+		connect();
+		int data = -1;
+		try {
+			st = connec.prepareStatement("SELECT ID FROM marcas WHERE MARCA = '" + brand + "'");
+			list = st.executeQuery();
+			data = list.getInt("ID");
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
+		}
+		close();
+		return data;
+	}
+	/**
+	 * Consultamos todos los modelos por medio de un ID de marca.
+	 * @param ID ID de la marca.
+	 * @return Devuelve un ArrayList de tipo Model con todos los modelos que sean de la marca con id igual a ID.
+	 */
+	public ArrayList<Model> brandFilter(int ID) {
+		connect();
+		ArrayList<Model> data = new ArrayList<Model>();
+		try {
+			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, C_ENERGETICA FROM modelos WHERE ID_MARCA = " + ID);
+			list = st.executeQuery();
+			Model model;
+			while (list.next()) {
+				model = new Model();
+				model.setModel(list.getString("MODELO"));
+				model.setConsumption(list.getDouble("CONSUMO"));
+				model.setEmissions(list.getInt("EMISIONES"));
+				
+				data.add(model);
+			}
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
+		}
+		close();
+		return data;
+	}
+	/**
+	 * Consultamos todos los modelos cuyo consumo sea igual o menor a un valor dado.
+	 * @param value Valor máximo de consumo.
+	 * @return Devuelve un ArrayList de tipo Model con todos los modelos que tengan un consumo igual o menor a "value".
+	 */
+	public ArrayList<Model> consumptionFilter(int value) {
+		connect();
+		ArrayList<Model> data = new ArrayList<Model>();
+		try {
+			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, C_ENERGETICA FROM modelos WHERE CONSUMO <= " + value);
+			list = st.executeQuery();
+			Model model;
+			while (list.next()) {
+				model = new Model();
+				model.setModel(list.getString("MODELO"));
+				model.setConsumption(list.getDouble("CONSUMO"));
+				model.setEmissions(list.getInt("EMISIONES"));
+				
+				data.add(model);
+			}
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
+		}
+		close();
+		return data;
+	}
+	/**
+	 * Consultamos todos los modelos cuyas emisiones sean igual o menor a un valor dado.
+	 * @param value Valor máximo de las emisiones.
+	 * @return Devuelve un ArrayList de tipo Model con todos los modelos que tengan unas emisiones igual o menor a "value".
+	 */
+	public ArrayList<Model> emissionsFilter(int value) {
+		connect();
+		ArrayList<Model> data = new ArrayList<Model>();
+		try {
+			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, C_ENERGETICA FROM modelos WHERE EMISIONES <= " + value);
+			list = st.executeQuery();
+			Model model;
+			while (list.next()) {
+				model = new Model();
+				model.setModel(list.getString("MODELO"));
+				model.setConsumption(list.getDouble("CONSUMO"));
+				model.setEmissions(list.getInt("EMISIONES"));
+				
+				data.add(model);
+			}
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
+		}
+		close();
+		return data;
+	}
+	/**
+	 * Consultamos todos los modelos cuya clasificación energética sea igual a un valor dado.
+	 * @param classification Valor de la clasificación energética.
+	 * @return Devuelve un ArrayList de tipo Model con todos los modelos que tengan como clasificación energética el valor "classification".
+	 */
+	public ArrayList<Model> energeticFilter(String classification) {
+		connect();
+		ArrayList<Model> data = new ArrayList<Model>();
+		try {
+			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, C_ENERGETICA FROM modelos WHERE C_ENERGETICA = '" + classification + "'");
+			list = st.executeQuery();
+			Model model;
+			while (list.next()) {
+				model = new Model();
+				model.setModel(list.getString("MODELO"));
+				model.setConsumption(list.getDouble("CONSUMO"));
+				model.setEmissions(list.getInt("EMISIONES"));
+				
+				data.add(model);
+			}
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
+		}
+		close();
+		return data;
 	}
 }

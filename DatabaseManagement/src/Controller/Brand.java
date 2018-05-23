@@ -13,18 +13,14 @@ public class Brand {
 	 */
 	/**
 	 * Constructura por defecto del objeto Brand.
-	 * @param ID Identificador del objeto Brand.
-	 * @param brand Nombre del objeto Brand.
 	 */
-	public Brand(int ID, String brand) {
-		this.ID = ID;
-		this.brand = brand;
-	}
+	public Brand() {}
 
 	/*
 	 * Getters and Setters
 	 */
 	/**
+	 * 
 	 * @return Devuelve el valor de la variable "ID".
 	 */
 	public int getID() {
@@ -38,6 +34,7 @@ public class Brand {
 		this.ID = ID;
 	}
 	/**
+	 * 
 	 * @return Devuelve la variable "brand".
 	 */
 	public String getBrand() {

@@ -1,60 +1,82 @@
 package Controller;
-
+/**
+ * El objeto Model será la base del programa. El objeto Model tiene como atributos 
+ * un objeto Brand y un objeto Efficiency además de un "ID", el nombre del modelo "model", 
+ * el consumo "consumption" y el numero de emisiones que produce "emissions"
+ * @author Stefano Mazzuka
+ *
+ */
 public class Model {
-	private int ID;
-	private	Brand brand;
 	private String model;
 	private double consumption;
 	private int emissions;
-	private Efficiency efficiency;
+	private String icon;
 
-	public Model(int iD, Brand brand, String model, double consumption, int emissions, Efficiency efficiency) {
-		super();
-		ID = iD;
-		this.brand = brand;
-		this.model = model;
-		this.consumption = consumption;
-		this.emissions = emissions;
-		this.efficiency = efficiency;
-	}
+	/*
+	 * Constructor
+	 */
+	/**
+	 * Constructura por defecto del objeto Model.
+	 */
+	public Model() {}
 
 	/*
 	 * Getters and Setters
 	 */
-	public int getID() {
-		return ID;
-	}
-	public void setID(int iD) {
-		ID = iD;
-	}
-	public Brand getBrand() {
-		return brand;
-	}
-	public void setBrand(Brand brand) {
-		this.brand = brand;
-	}
+	/**
+	 * 
+	 * @return Devuelve el valor de la variable "model".
+	 */
 	public String getModel() {
-		return model;
+		return this.model;
 	}
+	/**
+	 * Cambia el valor de la variable "model".
+	 * @param model Valor por el cual cambiar la variable "model";
+	 */
 	public void setModel(String model) {
 		this.model = model;
 	}
+	/**
+	 * 
+	 * @return Devuelve el valor de la variable "consumption".
+	 */
 	public double getConsumption() {
-		return consumption;
+		return this.consumption;
 	}
+	/**
+	 * Cambia el valor de la variable "consumption".
+	 * @param consumption Valor por el cual cambiar la variable "consumption";
+	 */
 	public void setConsumption(double consumption) {
 		this.consumption = consumption;
 	}
+	/**
+	 * 
+	 * @return Devuelve el valor de la variable "emissions".
+	 */
 	public int getEmissions() {
-		return emissions;
+		return this.emissions;
 	}
+	/**
+	 * Cambia el valor de la variable "emissions".
+	 * @param emissions Valor por el cual cambiar la variable "emissions";
+	 */
 	public void setEmissions(int emissions) {
 		this.emissions = emissions;
 	}
-	public Efficiency getEfficiency() {
-		return efficiency;
+	/**
+	 *
+	 * @return Devuelve el valor de la variable "icon".
+	 */
+	public String getIcon() {
+		return icon;
 	}
-	public void setEfficiency(Efficiency efficiency) {
-		this.efficiency = efficiency;
+	/**
+	 * Cambia el valor de la variable "icon".
+	 * @param icon Valor por el cual cambiar la variable "icon";
+	 */
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 }
