@@ -42,7 +42,7 @@ import java.awt.Font;
 
 import javax.swing.UIManager;
 import javax.swing.JScrollPane;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  * FullView es el JFrame principal de la aplicación.
@@ -60,7 +60,7 @@ public class FullView extends JFrame {
 	private JTextField modelTextField;
 	private JTextField consumptionTextField;
 	private JTextField emissionsTextField;
-	private JTable queryTable;
+	private ArrayList<Model> models;
 
 	/*
 	 * Constructor
@@ -72,7 +72,7 @@ public class FullView extends JFrame {
 		Connexions conn = new Connexions();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 800);
+		setBounds(100, 100, 800, 700);
 		setLocationRelativeTo(null);
 
 		JMenuBar menuBar = new JMenuBar();
@@ -367,9 +367,14 @@ public class FullView extends JFrame {
 		String[] head = new String[] {"MODELO", "CONSUMO", "EMISIONES", "C.E"};
 		Object[][] body = new Object[][] {};
 		JTable queryTable = new JTable();
-		QueryTableModel queryTablemodel = new QueryTableModel(body, head);
-		queryTable.setModel(queryTablemodel);
+		QueryTableModel queryTableModel = new QueryTableModel(body, head);
+		queryTable.setModel(queryTableModel);
 		scrollPane.setViewportView(queryTable);
+		
+		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+		queryTable.getColumn("CONSUMO").setCellRenderer(rightRenderer);
+		queryTable.getColumn("EMISIONES").setCellRenderer(rightRenderer);
 
 		JPanel createPanel = new JPanel();
 		contentPane.add(createPanel, "createPanel");
@@ -496,12 +501,13 @@ public class FullView extends JFrame {
 		gbc_energeticClassificationCreateComboBox.gridy = 5;
 		dataCreatePanel.add(energeticClassificationCreateComboBox, gbc_energeticClassificationCreateComboBox);
 
+		models = new ArrayList<Model>();
+		
 		searchButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				ArrayList<Model> models = new ArrayList<Model>();
+				// TODO Auto-generated method stub		
 				if (brandRadioButton.isSelected()) {	
 					int brandID = conn.selectBrandID((String) brandsQueryComboBox.getSelectedItem());
 					models = conn.brandFilter(brandID);
@@ -514,14 +520,52 @@ public class FullView extends JFrame {
 					models = conn.emissionsFilter(maximumEmissionsSlider.getValue());
 
 				else if (energeticClassificationRadioButton.isSelected()) {
-					String classification = conn.selectEnergeticClassication((String) energeticClassificationQueryComboBox.getSelectedItem());
+					String classification = conn.selectEnergeticClassification((String) 
+							energeticClassificationQueryComboBox.getSelectedItem());
 					models = conn.energeticFilter(classification);
 				}
 
-				updateTable(queryTablemodel, models);
+				updateTable(queryTableModel, models);
 			}
 		});
-
+		deleteButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String modelName = (String) queryTable.getValueAt(queryTable.getSelectedRow(), 0);
+				conn.deleteModel(modelName);
+				for (int i = 0; i < models.size(); i++) {
+					if (models.get(i).getModel().equals(modelName)) {
+						models.remove(models.get(i));
+						break;
+					}
+				}
+				updateTable(queryTableModel, models);
+				updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
+			}
+		});
+		saveButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				Model model = new Model();
+				model.setModel(modelTextField.getText());
+				model.setConsumption(Double.valueOf(consumptionTextField.getText()));
+				model.setEmissions(Integer.valueOf(emissionsTextField.getText()));
+				
+				int brandID = conn.selectBrandID((String) brandsCreateComboBox.getSelectedItem());
+				String classification = conn.selectEnergeticClassification((String) 
+						energeticClassificationCreateComboBox.getSelectedItem());
+				conn.insertModel(model, brandID, classification);
+				
+				updateComboBoxes(conn, brandsQueryComboBox, energeticClassificationQueryComboBox, 
+						brandsCreateComboBox, energeticClassificationCreateComboBox);
+				updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
+			}
+		});
+		
 		updateComboBoxes(conn, brandsQueryComboBox, energeticClassificationQueryComboBox, 
 				brandsCreateComboBox, energeticClassificationCreateComboBox);
 		updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
@@ -556,9 +600,11 @@ public class FullView extends JFrame {
 		int data;
 		data = conn.selectMaxConsumption();
 		maximumConsumptionSlider.setMaximum(data + 1);
+		maximumConsumptionSlider.setValue((data + 1) / 2);
 
 		data = conn.selectMaxEmissions();
 		maximumEmissionsSlider.setMaximum(data + 1);
+		maximumEmissionsSlider.setValue((data + 1) / 2);
 	}
 	/**
 	 * Actualizamos la talba con una lista de modelos dada.

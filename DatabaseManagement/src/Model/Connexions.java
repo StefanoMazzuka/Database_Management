@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 
 import Controller.Model;
 
@@ -96,7 +95,8 @@ public class Connexions {
 	}
 	/**
 	 * Consultamos todas las descripciones de las clasificaciones energéticas.
-	 * @return Devuelve un ArrayList de tipo String con todas las descripciones de las clasificaciones energéticas.
+	 * @return Devuelve un ArrayList de tipo String con todas las descripciones 
+	 * de las clasificaciones energéticas.
 	 */
 	public ArrayList<String> selectEnergeticClassificationDescriptions() {
 		connect();
@@ -119,11 +119,12 @@ public class Connexions {
 	 * @param desciption Valor de la descipción concreta.
 	 * @return Devuelve el nombre de la clasificación energética con descripción "desciption".
 	 */
-	public String selectEnergeticClassication(String desciption) {
+	public String selectEnergeticClassification(String desciption) {
 		connect();
 		String data = "";
 		try {
-			st = connec.prepareStatement("SELECT C_ENERGETICA FROM eficiencias WHERE DESCRIPCION = '" + desciption + "'");
+			st = connec.prepareStatement("SELECT C_ENERGETICA FROM eficiencias " + 
+		"WHERE DESCRIPCION = '" + desciption + "'");
 			list = st.executeQuery();
 			data = list.getString("C_ENERGETICA");
 		} catch (SQLException e) {
@@ -141,7 +142,8 @@ public class Connexions {
 	public String selectEnergeticIcon(String classification) {
 		String data = "";
 		try {
-			PreparedStatement st = connec.prepareStatement("SELECT ICONO FROM eficiencias WHERE C_ENERGETICA = '" + classification + "'");
+			PreparedStatement st = connec.prepareStatement("SELECT ICONO FROM eficiencias " + 
+		"WHERE C_ENERGETICA = '" + classification + "'");
 			ResultSet list = st.executeQuery();
 			data = list.getString("ICONO");
 		} catch (SQLException e) {
@@ -208,13 +210,15 @@ public class Connexions {
 	/**
 	 * Consultamos todos los modelos por medio de un ID de marca.
 	 * @param ID ID de la marca.
-	 * @return Devuelve un ArrayList de tipo Model con todos los modelos que sean de la marca con id igual a ID.
+	 * @return Devuelve un ArrayList de tipo Model con todos los modelos 
+	 * que sean de la marca con id igual a ID.
 	 */
 	public ArrayList<Model> brandFilter(int ID) {
 		connect();
 		ArrayList<Model> data = new ArrayList<Model>();
 		try {
-			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, C_ENERGETICA FROM modelos WHERE ID_MARCA = " + ID);
+			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, " + 
+		"C_ENERGETICA FROM modelos WHERE ID_MARCA = " + ID);
 			list = st.executeQuery();
 			Model model;
 			while (list.next()) {
@@ -235,13 +239,15 @@ public class Connexions {
 	/**
 	 * Consultamos todos los modelos cuyo consumo sea igual o menor a un valor dado.
 	 * @param value Valor máximo de consumo.
-	 * @return Devuelve un ArrayList de tipo Model con todos los modelos que tengan un consumo igual o menor a "value".
+	 * @return Devuelve un ArrayList de tipo Model con todos los modelos que tengan 
+	 * un consumo igual o menor a "value".
 	 */
 	public ArrayList<Model> consumptionFilter(int value) {
 		connect();
 		ArrayList<Model> data = new ArrayList<Model>();
 		try {
-			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, C_ENERGETICA FROM modelos WHERE CONSUMO <= " + value);
+			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, " + 
+		"C_ENERGETICA FROM modelos WHERE CONSUMO <= " + value);
 			list = st.executeQuery();
 			Model model;
 			while (list.next()) {
@@ -262,13 +268,15 @@ public class Connexions {
 	/**
 	 * Consultamos todos los modelos cuyas emisiones sean igual o menor a un valor dado.
 	 * @param value Valor máximo de las emisiones.
-	 * @return Devuelve un ArrayList de tipo Model con todos los modelos que tengan unas emisiones igual o menor a "value".
+	 * @return Devuelve un ArrayList de tipo Model con todos los modelos que tengan 
+	 * unas emisiones igual o menor a "value".
 	 */
 	public ArrayList<Model> emissionsFilter(int value) {
 		connect();
 		ArrayList<Model> data = new ArrayList<Model>();
 		try {
-			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, C_ENERGETICA FROM modelos WHERE EMISIONES <= " + value);
+			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, " + 
+		"C_ENERGETICA FROM modelos WHERE EMISIONES <= " + value);
 			list = st.executeQuery();
 			Model model;
 			while (list.next()) {
@@ -289,13 +297,15 @@ public class Connexions {
 	/**
 	 * Consultamos todos los modelos cuya clasificación energética sea igual a un valor dado.
 	 * @param classification Valor de la clasificación energética.
-	 * @return Devuelve un ArrayList de tipo Model con todos los modelos que tengan como clasificación energética el valor "classification".
+	 * @return Devuelve un ArrayList de tipo Model con todos los modelos que tengan 
+	 * como clasificación energética el valor "classification".
 	 */
 	public ArrayList<Model> energeticFilter(String classification) {
 		connect();
 		ArrayList<Model> data = new ArrayList<Model>();
 		try {
-			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, C_ENERGETICA FROM modelos WHERE C_ENERGETICA = '" + classification + "'");
+			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, "
+					+ "C_ENERGETICA FROM modelos WHERE C_ENERGETICA = '" + classification + "'");
 			list = st.executeQuery();
 			Model model;
 			while (list.next()) {
@@ -312,5 +322,36 @@ public class Connexions {
 		}
 		close();
 		return data;
+	}
+	/**
+	 * Borramos un modelo de la tabla.
+	 * @param model Nombre del modelo a borrar.
+	 */
+	public void deleteModel(String model) {
+		connect();
+		try {
+			st = connec.prepareStatement("DELETE FROM modelos WHERE MODELO = '" + model + "'");
+			st.executeUpdate();
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
+		}
+		close();
+	}
+	
+	public void insertModel(Model model, int brandID, String classification) {
+		try {
+			st = connec.prepareStatement("INSERT INTO modelos (ID_MARCA, MODELO, CONSUMO, " + 
+		"EMISIONES, C_ENERGETICA) VALUES('" 
+					+ brandID + "' , '"
+					+ model.getModel() + "', '" 
+					+ model.getConsumption() + "', '" 
+					+ model.getEmissions() + "', '" 
+					+ classification + "')");
+			st.executeUpdate();
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
+		}
 	}
 }

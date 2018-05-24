@@ -15,7 +15,7 @@ public class QueryTableModel extends DefaultTableModel{
 	}
 
 	@Override
-	public Class getColumnClass(int column) {
+	public Class<?> getColumnClass(int column) {
 		if (column == 3) return ImageIcon.class;
 		return Object.class;
 	}
