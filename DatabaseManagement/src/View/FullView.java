@@ -370,7 +370,7 @@ public class FullView extends JFrame {
 		QueryTableModel queryTableModel = new QueryTableModel(body, head);
 		queryTable.setModel(queryTableModel);
 		scrollPane.setViewportView(queryTable);
-		
+
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
 		rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
 		queryTable.getColumn("CONSUMO").setCellRenderer(rightRenderer);
@@ -502,7 +502,7 @@ public class FullView extends JFrame {
 		dataCreatePanel.add(energeticClassificationCreateComboBox, gbc_energeticClassificationCreateComboBox);
 
 		models = new ArrayList<Model>();
-		
+
 		searchButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -525,28 +525,28 @@ public class FullView extends JFrame {
 					models = conn.energeticFilter(classification);
 				}
 
-				updateTable(queryTableModel, models);
+				updateTable(queryTableModel);
 			}
 		});
 		deleteButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				String modelName = (String) queryTable.getValueAt(queryTable.getSelectedRow(), 0);
-				conn.deleteModel(modelName);
-				for (int i = 0; i < models.size(); i++) {
-					if (models.get(i).getModel().equals(modelName)) {
-						models.remove(models.get(i));
-						break;
-					}
+				Model model = models.get(queryTable.getSelectedRow());
+
+				int option = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el modelo?", 
+						"ATENCIÓN", JOptionPane.YES_NO_OPTION);
+				if (option == JOptionPane.YES_OPTION) {
+					conn.deleteModel(model.getID());
+					models.remove(model);
+					updateTable(queryTableModel);
+					updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
 				}
-				updateTable(queryTableModel, models);
-				updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
 			}
 		});
 		saveButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -554,18 +554,18 @@ public class FullView extends JFrame {
 				model.setModel(modelTextField.getText());
 				model.setConsumption(Double.valueOf(consumptionTextField.getText()));
 				model.setEmissions(Integer.valueOf(emissionsTextField.getText()));
-				
+
 				int brandID = conn.selectBrandID((String) brandsCreateComboBox.getSelectedItem());
 				String classification = conn.selectEnergeticClassification((String) 
 						energeticClassificationCreateComboBox.getSelectedItem());
 				conn.insertModel(model, brandID, classification);
-				
+
 				updateComboBoxes(conn, brandsQueryComboBox, energeticClassificationQueryComboBox, 
 						brandsCreateComboBox, energeticClassificationCreateComboBox);
 				updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
 			}
 		});
-		
+
 		updateComboBoxes(conn, brandsQueryComboBox, energeticClassificationQueryComboBox, 
 				brandsCreateComboBox, energeticClassificationCreateComboBox);
 		updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
@@ -610,14 +610,14 @@ public class FullView extends JFrame {
 	 * Actualizamos la talba con una lista de modelos dada.
 	 * @param models Lista de modelos que queremos mostrar en la tabla.
 	 */
-	private void updateTable(QueryTableModel queryTableModel, ArrayList<Model> models) {
+	private void updateTable(QueryTableModel queryTableModel) {
 		Object[][] body = new Object[models.size()][4];
 
 		int rowCount = queryTableModel.getRowCount();
 		for (int i = rowCount - 1; i >= 0; i--) {
 			queryTableModel.removeRow(i);
 		}
-		
+
 		ImageIcon icon;
 		String iconLocation = 
 				System.getProperty("user.dir") + File.separator + 

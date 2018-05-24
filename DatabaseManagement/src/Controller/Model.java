@@ -7,9 +7,10 @@ package Controller;
  *
  */
 public class Model {
+	private int ID;
 	private String model;
 	private double consumption;
-	private int emissions;
+	private double emissions;
 	private String icon;
 
 	/*
@@ -23,6 +24,20 @@ public class Model {
 	/*
 	 * Getters and Setters
 	 */
+	/**
+	 * 
+	 * @return Devuelve el valor de la variable "ID".
+	 */
+	public int getID() {
+		return this.ID;
+	}
+	/**
+	 * Cambia el valor de la variable "ID".
+	 * @param ID Valor por el cual cambiar la variable "ID";
+	 */
+	public void setID(int ID) {
+		this.ID = ID;
+	}
 	/**
 	 * 
 	 * @return Devuelve el valor de la variable "model".
@@ -55,14 +70,14 @@ public class Model {
 	 * 
 	 * @return Devuelve el valor de la variable "emissions".
 	 */
-	public int getEmissions() {
+	public double getEmissions() {
 		return this.emissions;
 	}
 	/**
 	 * Cambia el valor de la variable "emissions".
 	 * @param emissions Valor por el cual cambiar la variable "emissions";
 	 */
-	public void setEmissions(int emissions) {
+	public void setEmissions(double emissions) {
 		this.emissions = emissions;
 	}
 	/**

@@ -21,7 +21,7 @@ import Controller.Model;
  *
  */
 public class Connexions {
-	
+
 	private final String url = 
 			System.getProperty("user.dir") +
 			File.separator + "bbdd_gestmotor.sqlite";
@@ -36,7 +36,7 @@ public class Connexions {
 	 * Constructura por defecto del objeto Connexions.
 	 */
 	public Connexions() {}
-	
+
 	/*
 	 * Methods
 	 */
@@ -124,7 +124,7 @@ public class Connexions {
 		String data = "";
 		try {
 			st = connec.prepareStatement("SELECT C_ENERGETICA FROM eficiencias " + 
-		"WHERE DESCRIPCION = '" + desciption + "'");
+					"WHERE DESCRIPCION = '" + desciption + "'");
 			list = st.executeQuery();
 			data = list.getString("C_ENERGETICA");
 		} catch (SQLException e) {
@@ -143,7 +143,7 @@ public class Connexions {
 		String data = "";
 		try {
 			PreparedStatement st = connec.prepareStatement("SELECT ICONO FROM eficiencias " + 
-		"WHERE C_ENERGETICA = '" + classification + "'");
+					"WHERE C_ENERGETICA = '" + classification + "'");
 			ResultSet list = st.executeQuery();
 			data = list.getString("ICONO");
 		} catch (SQLException e) {
@@ -217,12 +217,13 @@ public class Connexions {
 		connect();
 		ArrayList<Model> data = new ArrayList<Model>();
 		try {
-			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, " + 
-		"C_ENERGETICA FROM modelos WHERE ID_MARCA = " + ID);
+			st = connec.prepareStatement("SELECT rowid, MODELO, CONSUMO, EMISIONES, " + 
+					"C_ENERGETICA FROM modelos WHERE ID_MARCA = " + ID);
 			list = st.executeQuery();
 			Model model;
 			while (list.next()) {
 				model = new Model();
+				model.setID(list.getInt("rowid"));
 				model.setModel(list.getString("MODELO"));
 				model.setConsumption(list.getDouble("CONSUMO"));
 				model.setEmissions(list.getInt("EMISIONES"));
@@ -246,12 +247,13 @@ public class Connexions {
 		connect();
 		ArrayList<Model> data = new ArrayList<Model>();
 		try {
-			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, " + 
-		"C_ENERGETICA FROM modelos WHERE CONSUMO <= " + value);
+			st = connec.prepareStatement("SELECT rowid, MODELO, CONSUMO, EMISIONES, " + 
+					"C_ENERGETICA FROM modelos WHERE CONSUMO <= " + value);
 			list = st.executeQuery();
 			Model model;
 			while (list.next()) {
 				model = new Model();
+				model.setID(list.getInt("rowid"));
 				model.setModel(list.getString("MODELO"));
 				model.setConsumption(list.getDouble("CONSUMO"));
 				model.setEmissions(list.getInt("EMISIONES"));
@@ -275,12 +277,13 @@ public class Connexions {
 		connect();
 		ArrayList<Model> data = new ArrayList<Model>();
 		try {
-			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, " + 
-		"C_ENERGETICA FROM modelos WHERE EMISIONES <= " + value);
+			st = connec.prepareStatement("SELECT rowid, MODELO, CONSUMO, EMISIONES, " + 
+					"C_ENERGETICA FROM modelos WHERE EMISIONES <= " + value);
 			list = st.executeQuery();
 			Model model;
 			while (list.next()) {
 				model = new Model();
+				model.setID(list.getInt("rowid"));
 				model.setModel(list.getString("MODELO"));
 				model.setConsumption(list.getDouble("CONSUMO"));
 				model.setEmissions(list.getInt("EMISIONES"));
@@ -304,12 +307,13 @@ public class Connexions {
 		connect();
 		ArrayList<Model> data = new ArrayList<Model>();
 		try {
-			st = connec.prepareStatement("SELECT MODELO, CONSUMO, EMISIONES, "
+			st = connec.prepareStatement("SELECT rowid, MODELO, CONSUMO, EMISIONES, "
 					+ "C_ENERGETICA FROM modelos WHERE C_ENERGETICA = '" + classification + "'");
 			list = st.executeQuery();
 			Model model;
 			while (list.next()) {
 				model = new Model();
+				model.setID(list.getInt("rowid"));
 				model.setModel(list.getString("MODELO"));
 				model.setConsumption(list.getDouble("CONSUMO"));
 				model.setEmissions(list.getInt("EMISIONES"));
@@ -325,12 +329,12 @@ public class Connexions {
 	}
 	/**
 	 * Borramos un modelo de la tabla.
-	 * @param model Nombre del modelo a borrar.
+	 * @param ID ID del modelo a borrar.
 	 */
-	public void deleteModel(String model) {
+	public void deleteModel(int ID) {
 		connect();
 		try {
-			st = connec.prepareStatement("DELETE FROM modelos WHERE MODELO = '" + model + "'");
+			st = connec.prepareStatement("DELETE FROM modelos WHERE rowid = " + ID);
 			st.executeUpdate();
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, e);
@@ -338,20 +342,27 @@ public class Connexions {
 		}
 		close();
 	}
-	
+	/**
+	 * Insertamos un nuevo modelo en la base de datos.
+	 * @param model Modelo a insertar.
+	 * @param brandID ID de la marca del modelo.
+	 * @param classification Clasificación energética del modelo.
+	 */
 	public void insertModel(Model model, int brandID, String classification) {
 		try {
-			st = connec.prepareStatement("INSERT INTO modelos (ID_MARCA, MODELO, CONSUMO, " + 
-		"EMISIONES, C_ENERGETICA) VALUES('" 
-					+ brandID + "' , '"
-					+ model.getModel() + "', '" 
-					+ model.getConsumption() + "', '" 
-					+ model.getEmissions() + "', '" 
+			connect();
+			st = connec.prepareStatement("INSERT INTO modelos VALUES("
+					+ brandID + ", '"
+					+ model.getModel() + "', " 
+					+ model.getConsumption() + ", " 
+					+ model.getEmissions() + ", '" 
 					+ classification + "')");
 			st.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Modelo agregado correctamente.", "INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, e);
 			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
 		}
+		close();
 	}
 }
