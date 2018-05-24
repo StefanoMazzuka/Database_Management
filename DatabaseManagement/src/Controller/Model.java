@@ -25,7 +25,7 @@ public class Model {
 	 * Getters and Setters
 	 */
 	/**
-	 * 
+	 * Devuelve el valor de la variable "ID".
 	 * @return Devuelve el valor de la variable "ID".
 	 */
 	public int getID() {
@@ -39,7 +39,7 @@ public class Model {
 		this.ID = ID;
 	}
 	/**
-	 * 
+	 * Devuelve el valor de la variable "model".
 	 * @return Devuelve el valor de la variable "model".
 	 */
 	public String getModel() {
@@ -53,7 +53,7 @@ public class Model {
 		this.model = model;
 	}
 	/**
-	 * 
+	 * Devuelve el valor de la variable "consumption".
 	 * @return Devuelve el valor de la variable "consumption".
 	 */
 	public double getConsumption() {
@@ -67,7 +67,7 @@ public class Model {
 		this.consumption = consumption;
 	}
 	/**
-	 * 
+	 * Devuelve el valor de la variable "emissions".
 	 * @return Devuelve el valor de la variable "emissions".
 	 */
 	public double getEmissions() {
@@ -81,7 +81,7 @@ public class Model {
 		this.emissions = emissions;
 	}
 	/**
-	 *
+	 * Devuelve el valor de la variable "icon".
 	 * @return Devuelve el valor de la variable "icon".
 	 */
 	public String getIcon() {
