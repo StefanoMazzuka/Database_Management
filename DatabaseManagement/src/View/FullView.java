@@ -43,7 +43,6 @@ import java.awt.Font;
 import javax.swing.UIManager;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  * FullView es el JFrame principal de la aplicación.
@@ -73,7 +72,7 @@ public class FullView extends JFrame {
 		Connexions conn = new Connexions();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 419);
+		setBounds(100, 100, 800, 800);
 		setLocationRelativeTo(null);
 
 		JMenuBar menuBar = new JMenuBar();
@@ -368,9 +367,8 @@ public class FullView extends JFrame {
 		String[] head = new String[] {"MODELO", "CONSUMO", "EMISIONES", "C.E"};
 		Object[][] body = new Object[][] {};
 		JTable queryTable = new JTable();
-		QueryTableModel queryTablbemodel = new QueryTableModel(body, head);
-		queryTable.setModel(queryTablbemodel);
-
+		QueryTableModel queryTablemodel = new QueryTableModel(body, head);
+		queryTable.setModel(queryTablemodel);
 		scrollPane.setViewportView(queryTable);
 
 		JPanel createPanel = new JPanel();
@@ -520,7 +518,7 @@ public class FullView extends JFrame {
 					models = conn.energeticFilter(classification);
 				}
 
-				updateTable(queryTablbemodel, models);
+				updateTable(queryTablemodel, models);
 			}
 		});
 
@@ -566,10 +564,14 @@ public class FullView extends JFrame {
 	 * Actualizamos la talba con una lista de modelos dada.
 	 * @param models Lista de modelos que queremos mostrar en la tabla.
 	 */
-	private void updateTable(DefaultTableModel queryTablbeModela, ArrayList<Model> models) {
-		Object[] head = {"MODELO", "CONSUMO", "EMISIONES", "C.E."};
+	private void updateTable(QueryTableModel queryTableModel, ArrayList<Model> models) {
 		Object[][] body = new Object[models.size()][4];
 
+		int rowCount = queryTableModel.getRowCount();
+		for (int i = rowCount - 1; i >= 0; i--) {
+			queryTableModel.removeRow(i);
+		}
+		
 		ImageIcon icon;
 		String iconLocation = 
 				System.getProperty("user.dir") + File.separator + 
@@ -582,9 +584,7 @@ public class FullView extends JFrame {
 			body[i][2] = models.get(i).getEmissions();
 			icon = new ImageIcon(iconLocation + models.get(i).getIcon());
 			body[i][3] = icon;
+			queryTableModel.addRow(body[i]);
 		}
-		QueryTableModel queryTablbeModel = new QueryTableModel(body, head);
-		//queryTable.setModel(queryTablbeModel);
-		JOptionPane.showMessageDialog(null, queryTable);
 	}
 }
