@@ -9,6 +9,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import Controller.Model;
+import Controller.QueryTableModel;
 import Model.Connexions;
 
 import java.awt.CardLayout;
@@ -41,6 +42,8 @@ import java.awt.Font;
 
 import javax.swing.UIManager;
 import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  * FullView es el JFrame principal de la aplicación.
@@ -68,30 +71,26 @@ public class FullView extends JFrame {
 	 */
 	public FullView() {
 		Connexions conn = new Connexions();
-		
-		String[] x = {"Hola", "Hola"};
-		String[][] x2 = {{"1", "1x"}, {"2", "2x"}, {"3", "3x"}, {"4", "4x"}, {"5", "5x"}, {"6", "6x"}, 
-				{"7", "7x"}, {"8", "8x"}, {"9", "9x"}, {"10", "10x"}, {"11", "11x"}, {"12", "12x"}, {"13", "13x"}};
-		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 419);
 		setLocationRelativeTo(null);
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		
+
 		JMenu archivoMenu = new JMenu("Archivo");
 		menuBar.add(archivoMenu);
-		
+
 		exportMenuItem = new JMenuItem("Exportar");
 		archivoMenu.add(exportMenuItem);
-		
+
 		JMenu modelosMenu = new JMenu("Modelos");
 		menuBar.add(modelosMenu);
-		
+
 		JMenuItem createMenuItem = new JMenuItem("Crear");
 		createMenuItem.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -100,10 +99,10 @@ public class FullView extends JFrame {
 			}
 		});
 		modelosMenu.add(createMenuItem);
-		
+
 		JMenuItem querysMenuItem = new JMenuItem("Consultar");
 		querysMenuItem.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -112,13 +111,13 @@ public class FullView extends JFrame {
 			}
 		});
 		modelosMenu.add(querysMenuItem);
-		
+
 		JMenu ayudaNewMenu = new JMenu("Ayuda");
 		menuBar.add(ayudaNewMenu);
-		
+
 		JMenuItem helpMenuItem = new JMenuItem("Ayuda");
 		helpMenuItem.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -131,23 +130,23 @@ public class FullView extends JFrame {
 			}
 		});
 		ayudaNewMenu.add(helpMenuItem);
-		
+
 		JMenuItem aboutMenuItem = new JMenuItem("Acerca de");
 		aboutMenuItem.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub		
-			    JLabel[] labels = new JLabel[4];
-			    labels[0] = new JLabel("Author:");
-			    labels[0].setFont(new Font("Arial", Font.BOLD, 12));
-			    labels[1] = new JLabel("Stefano Mazzuka");
-			    labels[1].setFont(new Font("Arial", Font.ITALIC, 12));
-			    labels[2] = new JLabel("Contact email:");
-			    labels[2].setFont(new Font("Arial", Font.BOLD, 12));
-			    labels[3] = new JLabel("stefano.mazzuka@gmail.com");
-			    labels[3].setFont(new Font("Arial", Font.ITALIC, 12));
-			    JOptionPane.showMessageDialog( null, labels, null, JOptionPane.INFORMATION_MESSAGE);
+				JLabel[] labels = new JLabel[4];
+				labels[0] = new JLabel("Author:");
+				labels[0].setFont(new Font("Arial", Font.BOLD, 12));
+				labels[1] = new JLabel("Stefano Mazzuka");
+				labels[1].setFont(new Font("Arial", Font.ITALIC, 12));
+				labels[2] = new JLabel("Contact email:");
+				labels[2].setFont(new Font("Arial", Font.BOLD, 12));
+				labels[3] = new JLabel("stefano.mazzuka@gmail.com");
+				labels[3].setFont(new Font("Arial", Font.ITALIC, 12));
+				JOptionPane.showMessageDialog( null, labels, null, JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		ayudaNewMenu.add(aboutMenuItem);
@@ -155,50 +154,54 @@ public class FullView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new CardLayout(0, 0));
-		
+
 		JPanel fullQueryPanel = new JPanel();
 		contentPane.add(fullQueryPanel, "fullQueryPanel");
 		fullQueryPanel.setLayout(new BorderLayout(0, 0));
-		
+
 		JToolBar toolBarFullQueryPanel = new JToolBar();
 		fullQueryPanel.add(toolBarFullQueryPanel, BorderLayout.NORTH);
-		
+
 		JButton searchButton = new JButton("");
 		searchButton.setIcon(new ImageIcon(
 				System.getProperty("user.dir") + File.separator + 
 				"src" + File.separator + 
 				"Resources" + File.separator + 
+				"Buttons" + File.separator + 
 				"find.png"));
 		toolBarFullQueryPanel.add(searchButton);
-		
+
 		JButton editButton = new JButton("");
 		editButton.setIcon(new ImageIcon(
 				System.getProperty("user.dir") + File.separator + 
 				"src" + File.separator + 
 				"Resources" + File.separator + 
+				"Buttons" + File.separator + 
 				"edit.png"));
 		toolBarFullQueryPanel.add(editButton);
-		
+
 		JButton deleteButton = new JButton("");
 		deleteButton.setIcon(new ImageIcon(
 				System.getProperty("user.dir") + File.separator +
 				"src" + File.separator + 
 				"Resources" + File.separator + 
+				"Buttons" + File.separator + 
 				"delete.png"));
 		toolBarFullQueryPanel.add(deleteButton);
-		
+
 		JButton saveExcelButton = new JButton("");
 		saveExcelButton.setIcon(new ImageIcon(
 				System.getProperty("user.dir") + File.separator + 
 				"src" + File.separator + 
 				"Resources" + File.separator + 
+				"Buttons" + File.separator + 
 				"saveExcel.png"));
 		toolBarFullQueryPanel.add(saveExcelButton);
-		
+
 		JPanel queryPanel = new JPanel();
 		fullQueryPanel.add(queryPanel, BorderLayout.CENTER);
 		queryPanel.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel dataQueryPanel = new JPanel();
 		queryPanel.add(dataQueryPanel, BorderLayout.NORTH);
 		GridBagLayout gbl_dataQueryPanel = new GridBagLayout();
@@ -207,7 +210,7 @@ public class FullView extends JFrame {
 		gbl_dataQueryPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0};
 		gbl_dataQueryPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0};
 		dataQueryPanel.setLayout(gbl_dataQueryPanel);
-		
+
 		JRadioButton brandRadioButton = new JRadioButton("Marca");
 		brandRadioButton.setSelected(true);
 		brandRadioButton.setHorizontalAlignment(SwingConstants.CENTER);
@@ -217,7 +220,7 @@ public class FullView extends JFrame {
 		gbc_brandRadioButton.gridx = 0;
 		gbc_brandRadioButton.gridy = 0;
 		dataQueryPanel.add(brandRadioButton, gbc_brandRadioButton);
-	
+
 		JComboBox<String> brandsQueryComboBox = new JComboBox<String>();
 		GridBagConstraints gbc_brandsQueryComboBox = new GridBagConstraints();
 		gbc_brandsQueryComboBox.anchor = GridBagConstraints.WEST;
@@ -225,7 +228,7 @@ public class FullView extends JFrame {
 		gbc_brandsQueryComboBox.gridx = 1;
 		gbc_brandsQueryComboBox.gridy = 0;
 		dataQueryPanel.add(brandsQueryComboBox, gbc_brandsQueryComboBox);
-		
+
 		JRadioButton maximumConsumptionRadioButton = new JRadioButton("Consumo máximo");
 		maximumConsumptionRadioButton.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_maximumConsumptionRadioButton = new GridBagConstraints();
@@ -234,7 +237,7 @@ public class FullView extends JFrame {
 		gbc_maximumConsumptionRadioButton.gridx = 0;
 		gbc_maximumConsumptionRadioButton.gridy = 1;
 		dataQueryPanel.add(maximumConsumptionRadioButton, gbc_maximumConsumptionRadioButton);
-		
+
 		JSlider maximumConsumptionSlider = new JSlider();
 		maximumConsumptionSlider.setPaintTicks(true);
 		maximumConsumptionSlider.setMajorTickSpacing(5);
@@ -245,23 +248,23 @@ public class FullView extends JFrame {
 		gbc_maximumConsumptionSlider.gridx = 1;
 		gbc_maximumConsumptionSlider.gridy = 1;
 		dataQueryPanel.add(maximumConsumptionSlider, gbc_maximumConsumptionSlider);
-		
+
 		JLabel consumptionSliderLabel = new JLabel("");
 		GridBagConstraints gbc_consumptionSliderLabel = new GridBagConstraints();
 		gbc_consumptionSliderLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_consumptionSliderLabel.gridx = 2;
 		gbc_consumptionSliderLabel.gridy = 1;
 		dataQueryPanel.add(consumptionSliderLabel, gbc_consumptionSliderLabel);
-		
+
 		maximumConsumptionSlider.addChangeListener(new ChangeListener() {
-			
+
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				// TODO Auto-generated method stub
-				 consumptionSliderLabel.setText(String.valueOf(((JSlider) e.getSource()).getValue()));
+				consumptionSliderLabel.setText(String.valueOf(((JSlider) e.getSource()).getValue()));
 			}
 		});
-		
+
 		JRadioButton maximumEmissionsRadioButton = new JRadioButton("Emisiones máximas");
 		maximumEmissionsRadioButton.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_maximumEmissionsRadioButton = new GridBagConstraints();
@@ -270,7 +273,7 @@ public class FullView extends JFrame {
 		gbc_maximumEmissionsRadioButton.gridx = 0;
 		gbc_maximumEmissionsRadioButton.gridy = 2;
 		dataQueryPanel.add(maximumEmissionsRadioButton, gbc_maximumEmissionsRadioButton);
-		
+
 		JSlider maximumEmissionsSlider = new JSlider();
 		maximumEmissionsSlider.setPaintTicks(true);
 		maximumEmissionsSlider.setMajorTickSpacing(100);
@@ -281,23 +284,23 @@ public class FullView extends JFrame {
 		gbc_maximumEmissionsSlider.gridx = 1;
 		gbc_maximumEmissionsSlider.gridy = 2;
 		dataQueryPanel.add(maximumEmissionsSlider, gbc_maximumEmissionsSlider);
-		
+
 		JLabel emissionsSliderLabel = new JLabel("");
 		GridBagConstraints gbc_emissionsSliderLabel = new GridBagConstraints();
 		gbc_emissionsSliderLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_emissionsSliderLabel.gridx = 2;
 		gbc_emissionsSliderLabel.gridy = 2;
-		
+
 		dataQueryPanel.add(emissionsSliderLabel, gbc_emissionsSliderLabel);
-				maximumEmissionsSlider.addChangeListener(new ChangeListener() {
-			
+		maximumEmissionsSlider.addChangeListener(new ChangeListener() {
+
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				// TODO Auto-generated method stub
 				emissionsSliderLabel.setText(String.valueOf(((JSlider) e.getSource()).getValue()));
 			}
 		});
-				
+
 		JRadioButton energeticClassificationRadioButton = new JRadioButton("Calificación energética");
 		energeticClassificationRadioButton.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_energeticClassificationRadioButton = new GridBagConstraints();
@@ -306,9 +309,9 @@ public class FullView extends JFrame {
 		gbc_energeticClassificationRadioButton.gridx = 0;
 		gbc_energeticClassificationRadioButton.gridy = 3;
 		dataQueryPanel.add(energeticClassificationRadioButton, gbc_energeticClassificationRadioButton);
-		
+
 		brandRadioButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -317,9 +320,9 @@ public class FullView extends JFrame {
 				energeticClassificationRadioButton.setSelected(false);
 			}
 		});
-		
+
 		maximumConsumptionRadioButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -328,9 +331,9 @@ public class FullView extends JFrame {
 				energeticClassificationRadioButton.setSelected(false);
 			}
 		});
-		
+
 		maximumEmissionsRadioButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -339,9 +342,9 @@ public class FullView extends JFrame {
 				energeticClassificationRadioButton.setSelected(false);
 			}
 		});
-		
+
 		energeticClassificationRadioButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -350,7 +353,7 @@ public class FullView extends JFrame {
 				maximumEmissionsRadioButton.setSelected(false);
 			}
 		});
-		
+
 		JComboBox<String> energeticClassificationQueryComboBox = new JComboBox<String>();
 		GridBagConstraints gbc_energeticClassificationQueryComboBox = new GridBagConstraints();
 		gbc_energeticClassificationQueryComboBox.insets = new Insets(0, 0, 0, 5);
@@ -358,28 +361,34 @@ public class FullView extends JFrame {
 		gbc_energeticClassificationQueryComboBox.gridx = 1;
 		gbc_energeticClassificationQueryComboBox.gridy = 3;
 		dataQueryPanel.add(energeticClassificationQueryComboBox, gbc_energeticClassificationQueryComboBox);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		queryPanel.add(scrollPane, BorderLayout.CENTER);
 
-		queryTable = new JTable();
+		String[] head = new String[] {"MODELO", "CONSUMO", "EMISIONES", "C.E"};
+		Object[][] body = new Object[][] {};
+		JTable queryTable = new JTable();
+		QueryTableModel queryTablbemodel = new QueryTableModel(body, head);
+		queryTable.setModel(queryTablbemodel);
+
 		scrollPane.setViewportView(queryTable);
-		
+
 		JPanel createPanel = new JPanel();
 		contentPane.add(createPanel, "createPanel");
 		createPanel.setLayout(new BorderLayout(0, 0));
-		
+
 		JToolBar toolBarFullCreatePanel = new JToolBar();
 		createPanel.add(toolBarFullCreatePanel, BorderLayout.NORTH);
-		
+
 		JButton saveButton = new JButton("");
 		saveButton.setIcon(new ImageIcon(
 				System.getProperty("user.dir") + File.separator + 
 				"src" + File.separator + 
 				"Resources" + File.separator + 
+				"Buttons" + File.separator + 
 				"save.png"));
 		toolBarFullCreatePanel.add(saveButton);
-		
+
 		JPanel dataCreatePanel = new JPanel();
 		dataCreatePanel.setBackground(UIManager.getColor("Panel.background"));
 		createPanel.add(dataCreatePanel, BorderLayout.CENTER);
@@ -389,7 +398,7 @@ public class FullView extends JFrame {
 		gbl_dataCreatePanel.columnWeights = new double[]{0.0, 0.0};
 		gbl_dataCreatePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		dataCreatePanel.setLayout(gbl_dataCreatePanel);
-		
+
 		JLabel createNewModelLabel = new JLabel("DATOS PARA EL NUEVO MODELO");
 		GridBagConstraints gbc_createNewModelLabel = new GridBagConstraints();
 		gbc_createNewModelLabel.gridwidth = 2;
@@ -397,7 +406,7 @@ public class FullView extends JFrame {
 		gbc_createNewModelLabel.gridx = 0;
 		gbc_createNewModelLabel.gridy = 0;
 		dataCreatePanel.add(createNewModelLabel, gbc_createNewModelLabel);
-		
+
 		JLabel brandLabel = new JLabel("Marca");
 		brandLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_brandLabel = new GridBagConstraints();
@@ -406,7 +415,7 @@ public class FullView extends JFrame {
 		gbc_brandLabel.gridx = 0;
 		gbc_brandLabel.gridy = 1;
 		dataCreatePanel.add(brandLabel, gbc_brandLabel);
-		
+
 		JComboBox<String> brandsCreateComboBox = new JComboBox<String>();
 		GridBagConstraints gbc_brandsCreateComboBox = new GridBagConstraints();
 		gbc_brandsCreateComboBox.anchor = GridBagConstraints.WEST;
@@ -414,7 +423,7 @@ public class FullView extends JFrame {
 		gbc_brandsCreateComboBox.gridx = 1;
 		gbc_brandsCreateComboBox.gridy = 1;
 		dataCreatePanel.add(brandsCreateComboBox, gbc_brandsCreateComboBox);
-		
+
 		JLabel modelLabel = new JLabel("Modelo");
 		modelLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_modelLabel = new GridBagConstraints();
@@ -423,7 +432,7 @@ public class FullView extends JFrame {
 		gbc_modelLabel.gridx = 0;
 		gbc_modelLabel.gridy = 2;
 		dataCreatePanel.add(modelLabel, gbc_modelLabel);
-		
+
 		modelTextField = new JTextField();
 		modelTextField.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_modelTextField = new GridBagConstraints();
@@ -433,7 +442,7 @@ public class FullView extends JFrame {
 		gbc_modelTextField.gridy = 2;
 		dataCreatePanel.add(modelTextField, gbc_modelTextField);
 		modelTextField.setColumns(10);
-		
+
 		JLabel consumptionLabel = new JLabel("Consumo");
 		consumptionLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_consumptionLabel = new GridBagConstraints();
@@ -442,7 +451,7 @@ public class FullView extends JFrame {
 		gbc_consumptionLabel.gridx = 0;
 		gbc_consumptionLabel.gridy = 3;
 		dataCreatePanel.add(consumptionLabel, gbc_consumptionLabel);
-		
+
 		consumptionTextField = new JTextField();
 		consumptionTextField.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_consumptionTextField = new GridBagConstraints();
@@ -452,7 +461,7 @@ public class FullView extends JFrame {
 		gbc_consumptionTextField.gridy = 3;
 		dataCreatePanel.add(consumptionTextField, gbc_consumptionTextField);
 		consumptionTextField.setColumns(10);
-		
+
 		JLabel emissionsLabel = new JLabel("Emisiones");
 		emissionsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_emissionsLabel = new GridBagConstraints();
@@ -461,7 +470,7 @@ public class FullView extends JFrame {
 		gbc_emissionsLabel.gridx = 0;
 		gbc_emissionsLabel.gridy = 4;
 		dataCreatePanel.add(emissionsLabel, gbc_emissionsLabel);
-		
+
 		emissionsTextField = new JTextField();
 		emissionsTextField.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_emissionsTextField = new GridBagConstraints();
@@ -471,7 +480,7 @@ public class FullView extends JFrame {
 		gbc_emissionsTextField.gridy = 4;
 		dataCreatePanel.add(emissionsTextField, gbc_emissionsTextField);
 		emissionsTextField.setColumns(10);
-		
+
 		JLabel energeticClassificationLabel = new JLabel("Clasifiación energética");
 		energeticClassificationLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_energeticClassificationLabel = new GridBagConstraints();
@@ -480,7 +489,7 @@ public class FullView extends JFrame {
 		gbc_energeticClassificationLabel.gridx = 0;
 		gbc_energeticClassificationLabel.gridy = 5;
 		dataCreatePanel.add(energeticClassificationLabel, gbc_energeticClassificationLabel);
-		
+
 		JComboBox<String> energeticClassificationCreateComboBox = new JComboBox<String>();
 		energeticClassificationCreateComboBox.setMaximumRowCount(5);
 		GridBagConstraints gbc_energeticClassificationCreateComboBox = new GridBagConstraints();
@@ -488,9 +497,9 @@ public class FullView extends JFrame {
 		gbc_energeticClassificationCreateComboBox.gridx = 1;
 		gbc_energeticClassificationCreateComboBox.gridy = 5;
 		dataCreatePanel.add(energeticClassificationCreateComboBox, gbc_energeticClassificationCreateComboBox);
-		
+
 		searchButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -498,48 +507,28 @@ public class FullView extends JFrame {
 				if (brandRadioButton.isSelected()) {	
 					int brandID = conn.selectBrandID((String) brandsQueryComboBox.getSelectedItem());
 					models = conn.brandFilter(brandID);
-					for (int i = 0; i < models.size(); i++) {
-						System.out.println(models.get(i).getModel());
-					}
 				}
-				
-				else if (maximumConsumptionRadioButton.isSelected()) {
+
+				else if (maximumConsumptionRadioButton.isSelected())
 					models = conn.consumptionFilter(maximumConsumptionSlider.getValue());
-					for (int i = 0; i < models.size(); i++) {
-						System.out.println(models.get(i).getConsumption());
-					}
-				}
-				
-				else if (maximumEmissionsRadioButton.isSelected()) {
+
+				else if (maximumEmissionsRadioButton.isSelected())
 					models = conn.emissionsFilter(maximumEmissionsSlider.getValue());
-					for (int i = 0; i < models.size(); i++) {
-						System.out.println(models.get(i).getEmissions());
-					}
-				}
-					
+
 				else if (energeticClassificationRadioButton.isSelected()) {
 					String classification = conn.selectEnergeticClassication((String) energeticClassificationQueryComboBox.getSelectedItem());
 					models = conn.energeticFilter(classification);
-					for (int i = 0; i < models.size(); i++) {
-						System.out.println(models.get(i).getIcon());
-					}
 				}
-				
-				queryTable = updateTable(models);
-				scrollPane.revalidate();
-				scrollPane.repaint();
-				queryPanel.revalidate();
-				queryPanel.repaint();
-				fullQueryPanel.revalidate();
-				fullQueryPanel.repaint();
+
+				updateTable(queryTablbemodel, models);
 			}
 		});
-		
+
 		updateComboBoxes(conn, brandsQueryComboBox, energeticClassificationQueryComboBox, 
 				brandsCreateComboBox, energeticClassificationCreateComboBox);
 		updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
 	}
-	
+
 	/**
 	 * Actualizamos todos los JComboBox de la vista.
 	 * @param conn Objeto de tipo Connexion para hacer las consultas a la base de datos.
@@ -554,7 +543,7 @@ public class FullView extends JFrame {
 		data = conn.selectBrandsNames();
 		brandsQueryComboBox.setModel(new DefaultComboBoxModel<>(new Vector<String>(data)));
 		brandsCreateComboBox.setModel(new DefaultComboBoxModel<>(new Vector<String>(data)));
-		
+
 		data = conn.selectEnergeticClassificationDescriptions();
 		energeticClassificationQueryComboBox.setModel(new DefaultComboBoxModel<>(new Vector<String>(data)));
 		energeticClassificationCreateComboBox.setModel(new DefaultComboBoxModel<>(new Vector<String>(data)));
@@ -569,22 +558,33 @@ public class FullView extends JFrame {
 		int data;
 		data = conn.selectMaxConsumption();
 		maximumConsumptionSlider.setMaximum(data + 1);
-		
+
 		data = conn.selectMaxEmissions();
 		maximumEmissionsSlider.setMaximum(data + 1);
 	}
-	private JTable updateTable(ArrayList<Model> models) {
-		String[] head = {"MODELO", "CONSUMO", "EMISIONES", "C.E."};
-		String[][] body = new String[models.size()][4];
+	/**
+	 * Actualizamos la talba con una lista de modelos dada.
+	 * @param models Lista de modelos que queremos mostrar en la tabla.
+	 */
+	private void updateTable(DefaultTableModel queryTablbeModela, ArrayList<Model> models) {
+		Object[] head = {"MODELO", "CONSUMO", "EMISIONES", "C.E."};
+		Object[][] body = new Object[models.size()][4];
+
+		ImageIcon icon;
+		String iconLocation = 
+				System.getProperty("user.dir") + File.separator + 
+				"src" + File.separator + 
+				"Resources" + File.separator + 
+				"EnergeticClassificationIcons" + File.separator;
 		for (int i = 0; i < models.size(); i++) {
 			body[i][0] = models.get(i).getModel();
-			body[i][1] = String.valueOf(models.get(i).getConsumption());
-			body[i][2] = String.valueOf(models.get(i).getEmissions());
-			body[i][3] = models.get(i).getIcon();
+			body[i][1] = models.get(i).getConsumption();
+			body[i][2] = models.get(i).getEmissions();
+			icon = new ImageIcon(iconLocation + models.get(i).getIcon());
+			body[i][3] = icon;
 		}
-		
-		JTable queryTable = new JTable(body, head);
-
-		return queryTable;
+		QueryTableModel queryTablbeModel = new QueryTableModel(body, head);
+		//queryTable.setModel(queryTablbeModel);
+		JOptionPane.showMessageDialog(null, queryTable);
 	}
 }
