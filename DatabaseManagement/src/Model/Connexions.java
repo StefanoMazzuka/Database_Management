@@ -365,4 +365,28 @@ public class Connexions {
 		}
 		close();
 	}
+	/**
+	 * Editamos un modelo en la base de datos.
+	 * @param model Modelo a editar.
+	 * @param brandID ID de la marca del modelo.
+	 * @param classification Clasificación energética del modelo.
+	 */
+	public void updateModel(Model model, int brandID, String classification) {
+		try {
+			connect();
+			st = connec.prepareStatement("UPDATE modelos SET "
+					+ "ID_MARCA = " + brandID + ", "
+					+ "MODELO = '" + model.getModel() + "', " 
+					+ "CONSUMO = " + model.getConsumption() + ", " 
+					+ "EMISIONES = " + model.getEmissions() + ", " 
+					+ "C_ENERGETICA = '" + classification + "' "
+					+ "WHERE rowid = " + model.getID());
+			st.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Modelo actualizado correctamente.", "INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
+		}
+		close();
+	}
 }

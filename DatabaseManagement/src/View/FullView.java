@@ -88,15 +88,6 @@ public class FullView extends JFrame {
 		menuBar.add(modelosMenu);
 
 		JMenuItem createMenuItem = new JMenuItem("Crear");
-		createMenuItem.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				CardLayout card = (CardLayout) contentPane.getLayout();
-				card.show(contentPane, "createPanel");
-			}
-		});
 		modelosMenu.add(createMenuItem);
 
 		JMenuItem querysMenuItem = new JMenuItem("Consultar");
@@ -392,6 +383,20 @@ public class FullView extends JFrame {
 				"save.png"));
 		toolBarFullCreatePanel.add(saveButton);
 
+		createMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				CardLayout card = (CardLayout) contentPane.getLayout();
+				card.show(contentPane, "createPanel");
+				saveButton.setName("insert");
+				modelTextField.setText("");
+				consumptionTextField.setText("");
+				emissionsTextField.setText("");
+			}
+		});
+
 		JPanel dataCreatePanel = new JPanel();
 		dataCreatePanel.setBackground(UIManager.getColor("Panel.background"));
 		createPanel.add(dataCreatePanel, BorderLayout.CENTER);
@@ -553,16 +558,46 @@ public class FullView extends JFrame {
 				Model model = new Model();
 				model.setModel(modelTextField.getText());
 				model.setConsumption(Double.valueOf(consumptionTextField.getText()));
-				model.setEmissions(Integer.valueOf(emissionsTextField.getText()));
+				model.setEmissions(Double.valueOf(emissionsTextField.getText()));
 
 				int brandID = conn.selectBrandID((String) brandsCreateComboBox.getSelectedItem());
 				String classification = conn.selectEnergeticClassification((String) 
 						energeticClassificationCreateComboBox.getSelectedItem());
-				conn.insertModel(model, brandID, classification);
+
+				if (saveButton.getName() == "insert") {
+					conn.insertModel(model, brandID, classification);
+					System.out.println("HOLA" + saveButton.getName());
+				}
+
+				else {
+					model.setID(Integer.valueOf(saveButton.getName()));
+					conn.updateModel(model, brandID, classification);
+					System.out.println(saveButton.getName());
+				}
 
 				updateComboBoxes(conn, brandsQueryComboBox, energeticClassificationQueryComboBox, 
 						brandsCreateComboBox, energeticClassificationCreateComboBox);
 				updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
+			}
+		});
+		editButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub	
+				Model model = models.get(queryTable.getSelectedRow());
+				saveButton.setName(String.valueOf(model.getID()));
+				String brand = (String) brandsQueryComboBox.getSelectedItem();
+				String classification = (String) energeticClassificationQueryComboBox.getSelectedItem();
+				
+				brandsCreateComboBox.setSelectedItem(brand);
+				energeticClassificationCreateComboBox.setSelectedItem(classification);
+				modelTextField.setText(model.getModel());
+				consumptionTextField.setText(String.valueOf(model.getConsumption()));
+				emissionsTextField.setText(String.valueOf(model.getEmissions()));
+				
+				CardLayout card = (CardLayout) contentPane.getLayout();
+				card.show(contentPane, "createPanel");
 			}
 		});
 
