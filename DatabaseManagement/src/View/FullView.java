@@ -163,39 +163,20 @@ public class FullView extends JFrame {
 		fullQueryPanel.add(toolBarFullQueryPanel, BorderLayout.NORTH);
 
 		JButton searchButton = new JButton("");
-		searchButton.setIcon(new ImageIcon(
-				System.getProperty("user.dir") + File.separator + 
-				"src" + File.separator + 
-				"Resources" + File.separator + 
-				"Buttons" + File.separator + 
-				"find.png"));
+		searchButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("find.png")));
+		
 		toolBarFullQueryPanel.add(searchButton);
 
 		JButton editButton = new JButton("");
-		editButton.setIcon(new ImageIcon(
-				System.getProperty("user.dir") + File.separator + 
-				"src" + File.separator + 
-				"Resources" + File.separator + 
-				"Buttons" + File.separator + 
-				"edit.png"));
+		editButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("edit.png")));
 		toolBarFullQueryPanel.add(editButton);
 
 		JButton deleteButton = new JButton("");
-		deleteButton.setIcon(new ImageIcon(
-				System.getProperty("user.dir") + File.separator +
-				"src" + File.separator + 
-				"Resources" + File.separator + 
-				"Buttons" + File.separator + 
-				"delete.png"));
+		deleteButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("delete.png")));
 		toolBarFullQueryPanel.add(deleteButton);
 
 		JButton saveExcelButton = new JButton("");
-		saveExcelButton.setIcon(new ImageIcon(
-				System.getProperty("user.dir") + File.separator + 
-				"src" + File.separator + 
-				"Resources" + File.separator + 
-				"Buttons" + File.separator + 
-				"saveExcel.png"));
+		saveExcelButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("saveExcel.png")));
 		toolBarFullQueryPanel.add(saveExcelButton);
 
 		JPanel queryPanel = new JPanel();
@@ -385,12 +366,7 @@ public class FullView extends JFrame {
 		createPanel.add(toolBarFullCreatePanel, BorderLayout.NORTH);
 
 		JButton saveButton = new JButton("");
-		saveButton.setIcon(new ImageIcon(
-				System.getProperty("user.dir") + File.separator + 
-				"src" + File.separator + 
-				"Resources" + File.separator + 
-				"Buttons" + File.separator + 
-				"save.png"));
+		saveButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("save.png")));
 		toolBarFullCreatePanel.add(saveButton);
 
 		createMenuItem.addActionListener(new ActionListener() {
@@ -686,18 +662,11 @@ public class FullView extends JFrame {
 			queryTableModel.removeRow(i);
 		}
 
-		ImageIcon icon;
-		String iconLocation = 
-				System.getProperty("user.dir") + File.separator + 
-				"src" + File.separator + 
-				"Resources" + File.separator + 
-				"EnergeticClassificationIcons" + File.separator;
 		for (int i = 0; i < models.size(); i++) {
 			body[i][0] = models.get(i).getModel();
 			body[i][1] = models.get(i).getConsumption();
 			body[i][2] = models.get(i).getEmissions();
-			icon = new ImageIcon(iconLocation + models.get(i).getIcon());
-			body[i][3] = icon;
+			body[i][3] = new ImageIcon(getClass().getClassLoader().getResource(models.get(i).getIcon()));;
 			queryTableModel.addRow(body[i]);
 		}
 	}
