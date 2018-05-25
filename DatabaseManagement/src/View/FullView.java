@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import Controller.ExcelExporter;
 import Controller.Model;
 import Controller.QueryTableModel;
 import Model.Connexions;
@@ -29,6 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -600,7 +602,20 @@ public class FullView extends JFrame {
 				card.show(contentPane, "createPanel");
 			}
 		});
-
+		saveExcelButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+					ExcelExporter excelExporter = new ExcelExporter();
+					excelExporter.export(queryTable, new File("C:\\Users\\McPuto\\Desktop\\x.xls"));
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+			}
+		});
+		
 		updateComboBoxes(conn, brandsQueryComboBox, energeticClassificationQueryComboBox, 
 				brandsCreateComboBox, energeticClassificationCreateComboBox);
 		updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
