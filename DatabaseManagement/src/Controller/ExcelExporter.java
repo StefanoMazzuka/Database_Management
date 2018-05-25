@@ -6,9 +6,26 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Método para exportar las consultas a un archivo Excel.
+ * @author Stefano Mazzuka
+ *
+ */
 public class ExcelExporter {
+	/*
+	 * Constructor
+	 */
+	/**
+	 * Constructora por defecto del objeto ExcelExporter.
+	 */
 	public ExcelExporter() {}
 
+	/**
+	 * Exportamos una lista de modelos a un archivo de tipo .xls.
+	 * @param models Lista de modelos a exportar.
+	 * @param file Archivo donde se exportará la lista de modelos.
+	 * @throws IOException
+	 */
 	public void export(ArrayList<Model> models, File file) throws IOException {
 		FileWriter out = new FileWriter(file);
 		BufferedWriter bw = new BufferedWriter(out);

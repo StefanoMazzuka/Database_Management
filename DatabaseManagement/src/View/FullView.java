@@ -58,7 +58,6 @@ public class FullView extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JMenuItem exportMenuItem;
 	private JTextField modelTextField;
 	private JTextField consumptionTextField;
 	private JTextField emissionsTextField;
@@ -83,7 +82,16 @@ public class FullView extends JFrame {
 		JMenu archivoMenu = new JMenu("Archivo");
 		menuBar.add(archivoMenu);
 
-		exportMenuItem = new JMenuItem("Exportar");
+		JMenuItem exportMenuItem = new JMenuItem("Exportar");
+		exportMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				models = conn.getAllDataBase();
+				exportModel();
+			}
+		});
 		archivoMenu.add(exportMenuItem);
 
 		JMenu modelosMenu = new JMenu("Modelos");
@@ -115,7 +123,7 @@ public class FullView extends JFrame {
 				// TODO Auto-generated method stub
 				try {
 					java.awt.Desktop.getDesktop().browse(
-							java.net.URI.create("https://stefanomazzuka.github.io/Database_Management/"));
+							java.net.URI.create("https://stefanomazzuka.github.io/Database_Management_Javadoc/"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -403,7 +411,7 @@ public class FullView extends JFrame {
 		dataCreatePanel.setBackground(UIManager.getColor("Panel.background"));
 		createPanel.add(dataCreatePanel, BorderLayout.CENTER);
 		GridBagLayout gbl_dataCreatePanel = new GridBagLayout();
-		gbl_dataCreatePanel.columnWidths = new int[] {0, 0};
+		gbl_dataCreatePanel.columnWidths = new int[] {0, 179};
 		gbl_dataCreatePanel.rowHeights = new int[] {0, 0, 0, 0, 0, 0};
 		gbl_dataCreatePanel.columnWeights = new double[]{0.0, 0.0};
 		gbl_dataCreatePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -412,7 +420,7 @@ public class FullView extends JFrame {
 		JLabel createNewModelLabel = new JLabel("DATOS PARA EL NUEVO MODELO");
 		GridBagConstraints gbc_createNewModelLabel = new GridBagConstraints();
 		gbc_createNewModelLabel.gridwidth = 2;
-		gbc_createNewModelLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_createNewModelLabel.insets = new Insets(0, 0, 5, 0);
 		gbc_createNewModelLabel.gridx = 0;
 		gbc_createNewModelLabel.gridy = 0;
 		dataCreatePanel.add(createNewModelLabel, gbc_createNewModelLabel);
@@ -446,6 +454,7 @@ public class FullView extends JFrame {
 		modelTextField = new JTextField();
 		modelTextField.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_modelTextField = new GridBagConstraints();
+		gbc_modelTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_modelTextField.anchor = GridBagConstraints.WEST;
 		gbc_modelTextField.insets = new Insets(0, 0, 5, 0);
 		gbc_modelTextField.gridx = 1;
@@ -540,16 +549,22 @@ public class FullView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				Model model = models.get(queryTable.getSelectedRow());
 
-				int option = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el modelo?", 
-						"ATENCIÓN", JOptionPane.YES_NO_OPTION);
-				if (option == JOptionPane.YES_OPTION) {
-					conn.deleteModel(model.getID());
-					models.remove(model);
-					updateTable(queryTableModel);
-					updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
+				if(!queryTable.getSelectionModel().isSelectionEmpty()) {
+					Model model = models.get(queryTable.getSelectedRow());
+
+					int option = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el modelo?", 
+							"ATENCIÓN", JOptionPane.YES_NO_OPTION);
+					if (option == JOptionPane.YES_OPTION) {
+						conn.deleteModel(model.getID());
+						models.remove(model);
+						updateTable(queryTableModel);
+						updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
+					}
 				}
+
+				else
+					JOptionPane.showMessageDialog(null, "Seleccione un modelo.", "ERROR", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		saveButton.addActionListener(new ActionListener() {
@@ -557,29 +572,32 @@ public class FullView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				Model model = new Model();
-				model.setModel(modelTextField.getText());
-				model.setConsumption(Double.valueOf(consumptionTextField.getText()));
-				model.setEmissions(Double.valueOf(emissionsTextField.getText()));
+				if (!modelTextField.getText().equals("") && !consumptionTextField.getText().equals("") 
+						&& !emissionsTextField.getText().equals("")) {
+					Model model = new Model();
+					model.setModel(modelTextField.getText());
+					model.setConsumption(Double.valueOf(consumptionTextField.getText()));
+					model.setEmissions(Double.valueOf(emissionsTextField.getText()));
 
-				int brandID = conn.selectBrandID((String) brandsCreateComboBox.getSelectedItem());
-				String classification = conn.selectEnergeticClassification((String) 
-						energeticClassificationCreateComboBox.getSelectedItem());
+					int brandID = conn.selectBrandID((String) brandsCreateComboBox.getSelectedItem());
+					String classification = conn.selectEnergeticClassification((String) 
+							energeticClassificationCreateComboBox.getSelectedItem());
 
-				if (saveButton.getName() == "insert") {
-					conn.insertModel(model, brandID, classification);
-					System.out.println("HOLA" + saveButton.getName());
+					if (saveButton.getName() == "insert")
+						conn.insertModel(model, brandID, classification);
+
+					else {
+						model.setID(Integer.valueOf(saveButton.getName()));
+						conn.updateModel(model, brandID, classification);
+					}
+
+					updateComboBoxes(conn, brandsQueryComboBox, energeticClassificationQueryComboBox, 
+							brandsCreateComboBox, energeticClassificationCreateComboBox);
+					updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
 				}
 
-				else {
-					model.setID(Integer.valueOf(saveButton.getName()));
-					conn.updateModel(model, brandID, classification);
-					System.out.println(saveButton.getName());
-				}
-
-				updateComboBoxes(conn, brandsQueryComboBox, energeticClassificationQueryComboBox, 
-						brandsCreateComboBox, energeticClassificationCreateComboBox);
-				updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
+				else
+					JOptionPane.showMessageDialog(null, "Datos del modelo vacíos.", "ERROR", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		editButton.addActionListener(new ActionListener() {
@@ -587,19 +605,24 @@ public class FullView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub	
-				Model model = models.get(queryTable.getSelectedRow());
-				saveButton.setName(String.valueOf(model.getID()));
-				String brand = (String) brandsQueryComboBox.getSelectedItem();
-				String classification = (String) energeticClassificationQueryComboBox.getSelectedItem();
+				if(!queryTable.getSelectionModel().isSelectionEmpty()) {
+					Model model = models.get(queryTable.getSelectedRow());
+					saveButton.setName(String.valueOf(model.getID()));
+					String brand = (String) brandsQueryComboBox.getSelectedItem();
+					String classification = (String) energeticClassificationQueryComboBox.getSelectedItem();
 
-				brandsCreateComboBox.setSelectedItem(brand);
-				energeticClassificationCreateComboBox.setSelectedItem(classification);
-				modelTextField.setText(model.getModel());
-				consumptionTextField.setText(String.valueOf(model.getConsumption()));
-				emissionsTextField.setText(String.valueOf(model.getEmissions()));
+					brandsCreateComboBox.setSelectedItem(brand);
+					energeticClassificationCreateComboBox.setSelectedItem(classification);
+					modelTextField.setText(model.getModel());
+					consumptionTextField.setText(String.valueOf(model.getConsumption()));
+					emissionsTextField.setText(String.valueOf(model.getEmissions()));
 
-				CardLayout card = (CardLayout) contentPane.getLayout();
-				card.show(contentPane, "createPanel");
+					CardLayout card = (CardLayout) contentPane.getLayout();
+					card.show(contentPane, "createPanel");
+				}
+
+				else
+					JOptionPane.showMessageDialog(null, "Seleccione un modelo.", "ERROR", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		saveExcelButton.addActionListener(new ActionListener() {
@@ -607,13 +630,7 @@ public class FullView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				try {
-					exportModel();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(null, e, "ERROR", JOptionPane.ERROR_MESSAGE);
-				}
+				exportModel();
 			}
 		});
 
@@ -688,15 +705,20 @@ public class FullView extends JFrame {
 	 * Generamos un excel con los modelos.
 	 * @throws IOException
 	 */
-	private void exportModel() throws IOException {
+	private void exportModel() {
 		JFileChooser fc = new JFileChooser();
 		int result = fc.showSaveDialog(null);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
 			ExcelExporter excelExporter = new ExcelExporter();	
-			excelExporter.export(models, new File(file.getPath() + file.getName() + ".xls"));
-			JOptionPane.showMessageDialog(null, "Fichero generado con éxito.", 
-					"INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
+			try {
+				excelExporter.export(models, new File(file.getPath() + ".xls"));
+				JOptionPane.showMessageDialog(null, "Fichero generado con éxito.", 
+						"INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
+			} catch (Exception e) {
+				// TODO: handle exception
+				JOptionPane.showMessageDialog(null, e, "ERROR", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 }

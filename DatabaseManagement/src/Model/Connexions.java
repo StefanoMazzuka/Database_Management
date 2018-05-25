@@ -391,4 +391,30 @@ public class Connexions {
 		}
 		close();
 	}
+	/**
+	 * Consultamos todos los modelos de la base de datos.
+	 * @return Devuelve un ArrayList de tipo Model con todos los modelos de la base de datos.
+	 */
+	public ArrayList<Model> getAllDataBase() {
+		connect();
+		ArrayList<Model> data = new ArrayList<Model>();
+		try {
+			st = connec.prepareStatement("SELECT * FROM modelos");
+			list = st.executeQuery();
+			Model model;
+			while (list.next()) {
+				model = new Model();
+				model.setModel(list.getString("MODELO"));
+				model.setConsumption(list.getDouble("CONSUMO"));
+				model.setEmissions(list.getInt("EMISIONES"));
+				model.setIcon(selectEnergeticIcon(list.getString("C_ENERGETICA")));
+				data.add(model);
+			}
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
+		}
+		close();
+		return data;
+	}
 }
