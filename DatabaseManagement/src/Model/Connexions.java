@@ -358,7 +358,8 @@ public class Connexions {
 					+ model.getEmissions() + ", '" 
 					+ classification + "')");
 			st.executeUpdate();
-			JOptionPane.showMessageDialog(null, "Modelo agregado correctamente.", "INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Modelo agregado correctamente.", 
+					"INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, e);
 			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);
@@ -382,7 +383,8 @@ public class Connexions {
 					+ "C_ENERGETICA = '" + classification + "' "
 					+ "WHERE rowid = " + model.getID());
 			st.executeUpdate();
-			JOptionPane.showMessageDialog(null, "Modelo actualizado correctamente.", "INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Modelo actualizado correctamente.", 
+					"INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, e);
 			Logger.getLogger(Connexions.class.getName()).log(Level.SEVERE, null, e);

@@ -1,0 +1,64 @@
+// Consultamos todas las descripciones de las clasificaciones energéticas.
+SELECT DESCRIPCION FROM eficiencias
+
+// Consultamos todos los nombres de las marcas.
+SELECT MARCA FROM marcas
+
+// Consultamos todas las descripciones de las clasificaciones energéticas.
+SELECT DESCRIPCION FROM eficiencias
+
+// Consultamos la clasificación energética de una descripcón dada.
+SELECT C_ENERGETICA FROM eficiencias 
+WHERE DESCRIPCION = desciption
+
+// Consultamos el nombre del icono de una clasifiación energética.
+SELECT ICONO FROM eficiencias 
+WHERE C_ENERGETICA = classification
+
+// Consultamos el máximo consumo de los modelos.
+SELECT MAX(CONSUMO) AS maxComsumo FROM modelos
+
+// Consultamos el máximo valor de emisiones de los modelos.
+SELECT MAX(EMISIONES) AS maxEmisiones FROM modelos
+
+// Consultamos el ID de una marca en concreto.
+SELECT ID FROM marcas 
+WHERE MARCA = brand
+
+// Consultamos todos los modelos por medio de un ID de marca.
+SELECT rowid, MODELO, CONSUMO, EMISIONES, C_ENERGETICA FROM modelos 
+WHERE ID_MARCA = ID
+
+// Consultamos todos los modelos cuyo consumo sea igual o menor a un valor dado.
+SELECT rowid, MODELO, CONSUMO, EMISIONES, C_ENERGETICA FROM modelos 
+WHERE CONSUMO <= value
+
+// Consultamos todos los modelos cuyas emisiones sean igual o menor a un valor dado.
+SELECT rowid, MODELO, CONSUMO, EMISIONES, C_ENERGETICA FROM modelos 
+WHERE EMISIONES <= value
+
+// Consultamos todos los modelos cuya clasificación energética sea igual a un valor dado.
+SELECT rowid, MODELO, CONSUMO, EMISIONES, C_ENERGETICA FROM modelos 
+WHERE C_ENERGETICA = classification
+
+// Borramos un modelo de la tabla.
+DELETE FROM modelos WHERE rowid = ID
+
+// Insertamos un nuevo modelo en la base de datos.
+INSERT INTO modelos 
+VALUES(brandID, 'model.getModel()', model.getConsumption(), model.getEmissions(), 'classification')
+
+// Editamos un modelo en la base de datos.
+UPDATE modelos SET ID_MARCA = brandID, 
+MODELO = 'model.getModel()',
+CONSUMO = model.getConsumption(),
+EMISIONES = model.getEmissions(), 
+C_ENERGETICA = 'classification'
+WHERE rowid = model.getID()
+
+// Delete one column
+CREATE TABLE t1_backup(ID_MARCA, MODELO, CONSUMO, EMISIONES, C_ENERGETICA);
+INSERT INTO t1_backup SELECT ID_MARCA, MODELO, CONSUMO, EMISIONES, C_ENERGETICA FROM modelos;
+DROP TABLE modelos;
+ALTER TABLE t1_backup RENAME TO modelos;
+COMMIT;

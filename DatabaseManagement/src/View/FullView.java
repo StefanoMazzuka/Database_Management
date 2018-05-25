@@ -30,11 +30,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JSlider;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -583,7 +583,7 @@ public class FullView extends JFrame {
 			}
 		});
 		editButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub	
@@ -591,31 +591,32 @@ public class FullView extends JFrame {
 				saveButton.setName(String.valueOf(model.getID()));
 				String brand = (String) brandsQueryComboBox.getSelectedItem();
 				String classification = (String) energeticClassificationQueryComboBox.getSelectedItem();
-				
+
 				brandsCreateComboBox.setSelectedItem(brand);
 				energeticClassificationCreateComboBox.setSelectedItem(classification);
 				modelTextField.setText(model.getModel());
 				consumptionTextField.setText(String.valueOf(model.getConsumption()));
 				emissionsTextField.setText(String.valueOf(model.getEmissions()));
-				
+
 				CardLayout card = (CardLayout) contentPane.getLayout();
 				card.show(contentPane, "createPanel");
 			}
 		});
 		saveExcelButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				try {
-					ExcelExporter excelExporter = new ExcelExporter();
-					excelExporter.export(queryTable, new File("C:\\Users\\McPuto\\Desktop\\x.xls"));
-				} catch (Exception e2) {
-					// TODO: handle exception
+					exportModel();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e, "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
-		
+
 		updateComboBoxes(conn, brandsQueryComboBox, energeticClassificationQueryComboBox, 
 				brandsCreateComboBox, energeticClassificationCreateComboBox);
 		updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
@@ -681,6 +682,21 @@ public class FullView extends JFrame {
 			icon = new ImageIcon(iconLocation + models.get(i).getIcon());
 			body[i][3] = icon;
 			queryTableModel.addRow(body[i]);
+		}
+	}
+	/**
+	 * Generamos un excel con los modelos.
+	 * @throws IOException
+	 */
+	private void exportModel() throws IOException {
+		JFileChooser fc = new JFileChooser();
+		int result = fc.showSaveDialog(null);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			ExcelExporter excelExporter = new ExcelExporter();	
+			excelExporter.export(models, new File(file.getPath() + file.getName() + ".xls"));
+			JOptionPane.showMessageDialog(null, "Fichero generado con éxito.", 
+					"INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 }
