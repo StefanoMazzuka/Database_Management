@@ -164,7 +164,7 @@ public class FullView extends JFrame {
 
 		JButton searchButton = new JButton("");
 		searchButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("find.png")));
-		
+
 		toolBarFullQueryPanel.add(searchButton);
 
 		JButton editButton = new JButton("");
@@ -550,28 +550,35 @@ public class FullView extends JFrame {
 				// TODO Auto-generated method stub
 				if (!modelTextField.getText().equals("") && !consumptionTextField.getText().equals("") 
 						&& !emissionsTextField.getText().equals("")) {
-					Model model = new Model();
-					model.setModel(modelTextField.getText());
-					model.setConsumption(Double.valueOf(consumptionTextField.getText()));
-					model.setEmissions(Double.valueOf(emissionsTextField.getText()));
 
-					int brandID = conn.selectBrandID((String) brandsCreateComboBox.getSelectedItem());
-					String classification = conn.selectEnergeticClassification((String) 
-							energeticClassificationCreateComboBox.getSelectedItem());
+					try {
+						Model model = new Model();
+						model.setModel(modelTextField.getText());
+						model.setConsumption(Double.valueOf(consumptionTextField.getText()));
+						model.setEmissions(Double.valueOf(emissionsTextField.getText()));
+						int brandID = conn.selectBrandID((String) brandsCreateComboBox.getSelectedItem());
+						String classification = conn.selectEnergeticClassification((String) 
+								energeticClassificationCreateComboBox.getSelectedItem());
 
-					if (saveButton.getName() == "insert")
-						conn.insertModel(model, brandID, classification);
+						if (saveButton.getName() == "insert")
+							conn.insertModel(model, brandID, classification);
 
-					else {
-						model.setID(Integer.valueOf(saveButton.getName()));
-						conn.updateModel(model, brandID, classification);
+						else {
+							model.setID(Integer.valueOf(saveButton.getName()));
+							conn.updateModel(model, brandID, classification);
+						}
+
+						updateComboBoxes(conn, brandsQueryComboBox, energeticClassificationQueryComboBox, 
+								brandsCreateComboBox, energeticClassificationCreateComboBox);
+						updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
+					} catch (Exception e2) {
+						// TODO: handle exception
+						JOptionPane.showMessageDialog(null, "Datos inválidos.", "ERROR", JOptionPane.ERROR_MESSAGE);
+						consumptionTextField.setText("");
+						emissionsTextField.setText("");
 					}
-
-					updateComboBoxes(conn, brandsQueryComboBox, energeticClassificationQueryComboBox, 
-							brandsCreateComboBox, energeticClassificationCreateComboBox);
-					updateSliders(conn, maximumConsumptionSlider, maximumEmissionsSlider);
 				}
-
+				
 				else
 					JOptionPane.showMessageDialog(null, "Datos del modelo vacíos.", "ERROR", JOptionPane.ERROR_MESSAGE);
 			}
